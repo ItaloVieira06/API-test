@@ -1,0 +1,327 @@
+body {
+    margin: 0;
+    padding: 80px 20px 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+
+    background-color: #f2f2f2;
+    font-family: Arial, sans-serif;
+    color: #333;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Caixa principal */
+body > div {
+    width: 700px;
+    max-width: 90%;
+    box-sizing: border-box;
+    padding: 30px;
+
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
+    margin-bottom: 70px;
+}
+
+/* Evita que textos ultrapassem a caixa */
+body > div p {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    line-height: 1.6;
+}
+
+/* Garante que títulos também respeitem a caixa */
+body > div h1,
+body > div h2 {
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* Evita que os elementos internos aumentem a largura */
+body > div * {
+    box-sizing: border-box;
+}
+
+/* Foto + informações */
+body > div > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+body > div > div:first-child > div {
+    min-width: 0;
+}
+
+/* Foto */
+img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ddd;
+}
+
+/* Nome */
+h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+/* Curso */
+h1 + p {
+  margin: 0;
+  color: #666;
+}
+
+/* Títulos */
+h2 {
+  margin-top: 25px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #eee;
+}
+
+/* Lista de hobbies */
+ul {
+  padding-left: 25px;
+}
+
+li {
+  margin-bottom: 8px;
+}
+
+/* Biografia */
+body > div > p {
+  line-height: 1.6;
+}
+
+/* Links */
+a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Rodapé */
+footer {
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+}
+
+/* Tags de hobbies */
+.hobbies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.hobbies span {
+  padding: 7px 14px;
+  background-color: #e9ecef;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #333;
+}
+
+.links {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 45px;
+    width: 100%;
+}
+
+.redes-sociais {
+    display: flex;
+    gap: 10px;
+}
+
+.links a {
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.redes-sociais a {
+    background-color: #e9ecef;
+    color: #333;
+}
+
+.redes-sociais a:hover {
+    background-color: #d6d8db;
+}
+
+.contato {
+    background-color: #0066cc;
+    color: white;
+}
+
+.contato:hover {
+    background-color: #0052a3;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 15px 30px;
+
+    background-color: white;
+    border-top: 1px solid #ddd;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #777;
+    font-size: 14px;
+}
+
+footer p {
+    margin: 0;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 60px;
+    box-sizing: border-box;
+
+    padding: 0 30px;
+
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    z-index: 1000;
+}
+
+#tema-btn {
+    padding: 8px 14px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    background-color: #f2f2f2;
+    color: #333;
+
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#tema-btn:hover {
+    background-color: #e0e0e0;
+}
+
+body.tema-escuro {
+    background-color: #121212;
+    color: #eeeeee;
+}
+
+body.tema-escuro > div {
+    background-color: #1e1e1e;
+    color: #eeeeee;
+}
+
+body.tema-escuro .navbar {
+    background-color: #1e1e1e;
+    border-bottom-color: #333333;
+}
+
+body.tema-escuro #tema-btn {
+    background-color: #333333;
+    color: #eeeeee;
+    border-color: #555555;
+}
+
+body.tema-escuro h2 {
+    border-bottom-color: #333333;
+}
+
+body.tema-escuro .hobbies span {
+    background-color: #333333;
+    color: #eeeeee;
+}
+
+body.tema-escuro footer {
+    background-color: #1e1e1e;
+    border-top-color: #333333;
+    color: #aaaaaa;
+}
+
+body.tema-escuro .redes-sociais a {
+    background-color: #333333;
+    color: #eeeeee;
+}
+
+.votacao {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+
+    margin-top: 30px;
+}
+
+.vote {
+    width: 35px;
+    height: 35px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #e9ecef;
+    color: #555;
+
+    font-size: 18px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vote:hover {
+    background-color: #d6d8db;
+}
+
+#contador {
+    min-width: 25px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Upvote selecionado */
+.upvote.ativo {
+    color: #ff4500;
+}
+
+/* Downvote selecionado */
+.downvote.ativo {
+    color: #7193ff;
+}
