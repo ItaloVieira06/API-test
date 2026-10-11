@@ -64,3 +64,5 @@ async function carregarDisciplinas() {
     lista.appendChild(li);
   });
 }
+
+carregarDisciplinas();
