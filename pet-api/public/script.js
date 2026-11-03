@@ -99,10 +99,9 @@ const modalDisciplina = document.getElementById("modal-disciplina");
 const tituloModalDisciplina = document.getElementById("titulo-modal-disciplina");
 const botaoSalvarDisciplina = document.getElementById("salvar-disciplina");
 const botaoExcluirDisciplina = document.getElementById("excluir-disciplina");
-let disciplinaEmEdicao = null;
+const idDisciplina = document.getElementById("id-disciplina");
 
 function abrirCriacaoDisciplina() {
-  disciplinaEmEdicao = null;
   formularioDisciplina.reset();
   erroDisciplina.textContent = "";
   tituloModalDisciplina.textContent = "Adicionar disciplina";
@@ -113,7 +112,7 @@ function abrirCriacaoDisciplina() {
 }
 
 function abrirEdicaoDisciplina(disciplina) {
-  disciplinaEmEdicao = disciplina.id;
+  idDisciplina.value = disciplina.id;
   formularioDisciplina.elements.nome.value = disciplina.nome;
   formularioDisciplina.elements.semestre.value = disciplina.semestre;
   erroDisciplina.textContent = "";
@@ -137,7 +136,7 @@ modalDisciplina.addEventListener("click", (evento) => {
 });
 
 botaoExcluirDisciplina.addEventListener("click", async () => {
-  if (disciplinaEmEdicao === null) {
+  if (idDisciplina.value === "") {
     return;
   }
 
@@ -150,7 +149,7 @@ botaoExcluirDisciplina.addEventListener("click", async () => {
   botaoSalvarDisciplina.disabled = true;
 
   try {
-    const resposta = await fetch(`/api/disciplinas/${disciplinaEmEdicao}`, {
+    const resposta = await fetch(`/api/disciplinas/${idDisciplina.value}`, {
       method: "DELETE"
     });
 
@@ -178,11 +177,12 @@ formularioDisciplina.addEventListener("submit", async (evento) => {
   botaoSalvarDisciplina.disabled = true;
 
   try {
-    const url = disciplinaEmEdicao === null
-      ? "/api/disciplinas"
-      : `/api/disciplinas/${disciplinaEmEdicao}`;
+    const editando = idDisciplina.value !== "";
+    const url = editando
+      ? `/api/disciplinas/${idDisciplina.value}`
+      : "/api/disciplinas";
     const resposta = await fetch(url, {
-      method: disciplinaEmEdicao === null ? "POST" : "PUT",
+      method: editando ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nome: formularioDisciplina.elements.nome.value.trim(),

@@ -24,12 +24,12 @@ app.get("/api/perfil", (req, res) => {
 });
 
 let proximoId = Math.max(...disciplinas.map((disciplina) => disciplina.id)) + 1;
-//buscar geral
+//buscar disciplinas em geral
 app.get("/api/disciplinas", (req, res) => {
     res.json(disciplinas);
 });
 
-//buscar por id
+//buscar disciplinas por id
 app.get("/api/disciplinas/:id", (req, res) => {
   const id = Number(req.params.id);
   const disciplina = disciplinas.find((d) => d.id === id);
