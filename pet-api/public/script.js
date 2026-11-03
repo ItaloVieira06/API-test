@@ -54,15 +54,25 @@ downvote.addEventListener("click", function () {
 });
 
 async function carregarDisciplinas() {
-  const resposta = await fetch("/api/disciplinas");
-  const disciplinas = await resposta.json();
   const lista = document.getElementById("lista");
-  lista.innerHTML = "";
-  disciplinas.forEach((d) => {
-    const li = document.createElement("li");
-    li.textContent = `${d.nome} (${d.semestre}º semestre)`;
-    lista.appendChild(li);
-  });
+  try {
+    const resposta = await fetch("/api/disciplinas");
+    if (!resposta.ok) {
+      throw new Error(`A API respondeu com o status ${resposta.status}`);
+    }
+
+    const disciplinas = await resposta.json();
+    lista.innerHTML = "";
+    disciplinas.forEach((d) => {
+      const li = document.createElement("li");
+      li.textContent = `${d.nome} (${d.semestre}º semestre)`;
+      lista.appendChild(li);
+    });
+  } catch (erro) {
+    console.error("Erro ao carregar disciplinas:", erro);
+    lista.textContent =
+      "Não foi possível carregar as disciplinas. Inicie a API e acesse esta página por http://localhost:3000.";
+  }
 }
 
 carregarDisciplinas();
