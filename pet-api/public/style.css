@@ -148,11 +148,123 @@ footer {
 
 .disciplinas li {
     margin: 0;
+}
+
+.disciplina-editar {
     padding: 7px 14px;
-    background-color: #e9ecef;
+    border: 0;
     border-radius: 20px;
-    font-size: 14px;
+    background-color: #e9ecef;
     color: #333;
+    font: inherit;
+    cursor: pointer;
+}
+
+.disciplina-editar:hover {
+    background-color: #d6d8db;
+}
+
+.botao-disciplina {
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 20px;
+    background-color: #0066cc;
+    color: white;
+    font: inherit;
+    cursor: pointer;
+}
+
+.botao-disciplina:hover {
+    background-color: #0052a3;
+}
+
+dialog {
+    width: min(420px, calc(100% - 32px));
+    padding: 24px;
+    border: 0;
+    border-radius: 12px;
+    background-color: white;
+    color: #333;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cabecalho-modal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.cabecalho-modal h2 {
+    margin: 0 0 20px;
+}
+
+.fechar-modal {
+    align-self: flex-start;
+    padding: 0 4px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+dialog form > label {
+    display: block;
+    margin: 12px 0 6px;
+}
+
+dialog form > input {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font: inherit;
+}
+
+#erro-disciplina {
+    min-height: 1.2em;
+    margin: 12px 0;
+    color: #b00020;
+}
+
+.acoes-modal {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.botao-excluir {
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 20px;
+    background-color: #b00020;
+    color: white;
+    font: inherit;
+    cursor: pointer;
+}
+
+.botao-excluir:hover {
+    background-color: #8c0019;
+}
+
+.botao-excluir:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+dialog .botao-disciplina:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.erro-lista {
+    color: #b00020;
 }
 
 .links {
@@ -286,9 +398,24 @@ body.tema-escuro .hobbies span {
     color: #eeeeee;
 }
 
-body.tema-escuro .disciplinas li {
+body.tema-escuro .disciplina-editar {
     background-color: #333333;
     color: #eeeeee;
+}
+
+body.tema-escuro .disciplina-editar:hover {
+    background-color: #444444;
+}
+
+body.tema-escuro dialog {
+    background-color: #1e1e1e;
+    color: #eeeeee;
+}
+
+body.tema-escuro dialog form > input {
+    background-color: #333333;
+    color: #eeeeee;
+    border-color: #555555;
 }
 
 body.tema-escuro footer {

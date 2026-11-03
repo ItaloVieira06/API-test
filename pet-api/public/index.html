@@ -30,7 +30,8 @@
         </div>
 
         <h2>Disciplinas</h2>
-                <ul class="disciplinas" id="lista"></ul>
+        <ul class="disciplinas" id="lista"></ul>
+        <button id="abrir-form-disciplina" class="botao-disciplina" type="button">+ Adicionar disciplina</button>
 
         <h2>Sobre</h2>
 
@@ -70,6 +71,24 @@
         <footer>
             <p>© Ítalo do Espírito Santo Vieira <span id="data-atual"></span></p>
         </footer>
+        <dialog id="modal-disciplina" aria-labelledby="titulo-modal-disciplina">
+            <form id="form-disciplina">
+                <div class="cabecalho-modal">
+                    <h2 id="titulo-modal-disciplina">Adicionar disciplina</h2>
+                    <button id="fechar-modal-disciplina" class="fechar-modal" type="button"
+                        aria-label="Fechar janela">×</button>
+                </div>
+                <label for="nome-disciplina">Nome</label>
+                <input id="nome-disciplina" name="nome" type="text" />
+                <label for="semestre-disciplina">Período</label>
+                <input id="semestre-disciplina" name="semestre" type="number" min="1" required />
+                <p id="erro-disciplina" role="alert" aria-live="polite"></p>
+                <div class="acoes-modal">
+                    <button id="excluir-disciplina" class="botao-excluir" type="button" hidden>Excluir</button>
+                    <button id="salvar-disciplina" class="botao-disciplina" type="submit">Adicionar</button>
+                </div>
+            </form>
+        </dialog>
         <script src="script.js"></script>
 </body>
 
