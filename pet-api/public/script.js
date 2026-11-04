@@ -238,8 +238,6 @@ formularioDisciplina.addEventListener("submit", async (evento) => {
   }
 });
 
-carregarDisciplinas();
-
 const modalEndereco = document.getElementById("modal-endereco");
 const formularioEndereco = document.getElementById("form-endereco");
 const cepEndereco = document.getElementById("cep-endereco");
@@ -424,4 +422,16 @@ async function carregarCepSalvo() {
   }
 }
 
-carregarCepSalvo();
+async function carregarDadosIniciais() {
+  const indicadorCarregamento = document.getElementById("carregando");
+  try {
+    await Promise.all([
+      carregarDisciplinas(),
+      carregarCepSalvo()
+    ]);
+  } finally {
+    indicadorCarregamento.hidden = true;
+  }
+}
+
+carregarDadosIniciais();

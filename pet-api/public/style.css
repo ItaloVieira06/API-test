@@ -13,6 +13,18 @@ body {
     align-items: center;
 }
 
+#carregando {
+    position: fixed;
+    top: 16px;
+    left: 20px;
+    z-index: 1;
+    margin: 0;
+}
+
+#carregando[hidden] {
+    display: none;
+}
+
 /* Caixa principal */
 body > div {
     width: 700px;
