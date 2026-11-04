@@ -19,6 +19,8 @@
             <div>
                 <h1>Ítalo do Espírito Santo Vieira</h1>
                 <p>Jogos Digitais - Centro Universitário Farias Brito</p>
+                <p id="cep-salvo" hidden></p>
+                <button id="abrir-modal-endereco" class="botao-disciplina" type="button">Informar endereço</button>
 
                 <div class="hobbies">
                     <span>Programação</span>
@@ -35,7 +37,8 @@
 
         <h2>Sobre</h2>
 
-        <p>
+        <div class="sobre-editor" id="sobre-editor">
+          <p id="texto-sobre" role="button" tabindex="0" aria-label="Clique para editar o texto Sobre">
             Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical
             Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at
             Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem
@@ -48,7 +51,12 @@
             The standard chunk of Lorem Ipsum used since 1966 is reproduced below for those interested. Sections 1.10.32
             and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form,
             accompanied by English versions from the 1914 translation by H. Rackham.
-        </p>
+          </p>
+          <textarea id="campo-sobre" aria-label="Editar texto Sobre" hidden></textarea>
+          <div class="sobre-acoes">
+            <button id="salvar-sobre" class="botao-disciplina" type="button" hidden>Salvar</button>
+          </div>
+        </div>
 
         <div class="votacao">
             <button class="vote upvote" id="upvote">▲</button>
@@ -87,6 +95,38 @@
                 <div class="acoes-modal">
                     <button id="excluir-disciplina" class="botao-excluir" type="button" hidden>Excluir</button>
                     <button id="salvar-disciplina" class="botao-disciplina" type="submit">Adicionar</button>
+                </div>
+            </form>
+        </dialog>
+        <dialog id="modal-endereco" aria-labelledby="titulo-modal-endereco">
+            <form id="form-endereco">
+                <div class="cabecalho-modal">
+                    <h2 id="titulo-modal-endereco">Endereço</h2>
+                    <button id="fechar-modal-endereco" class="fechar-modal" type="button"
+                        aria-label="Fechar janela">×</button>
+                </div>
+                <label for="cep-endereco">CEP</label>
+                <div class="campo-cep">
+                    <input id="cep-endereco" name="cep" type="text" inputmode="numeric" maxlength="9"
+                        autocomplete="postal-code" placeholder="00000-000" required />
+                    <button id="buscar-cep" class="botao-disciplina" type="button">Buscar</button>
+                </div>
+                <label for="rua-endereco">Rua</label>
+                <input id="rua-endereco" name="logradouro" type="text" autocomplete="address-line1" readonly />
+                <label for="numero-endereco">Número</label>
+                <input id="numero-endereco" name="numero" type="text" autocomplete="address-line2" />
+                <label for="complemento-endereco">Complemento (opcional)</label>
+                <input id="complemento-endereco" name="complemento" type="text" />
+                <label for="bairro-endereco">Bairro</label>
+                <input id="bairro-endereco" name="bairro" type="text" readonly />
+                <label for="cidade-endereco">Cidade</label>
+                <input id="cidade-endereco" name="localidade" type="text" autocomplete="address-level2" readonly />
+                <label for="uf-endereco">UF</label>
+                <input id="uf-endereco" name="uf" type="text" autocomplete="address-level1" readonly />
+                <p id="status-endereco" role="status" aria-live="polite"></p>
+                <div class="acoes-modal">
+                    <span></span>
+                    <button id="salvar-endereco" class="botao-disciplina" type="submit" disabled>Salvar endereço</button>
                 </div>
             </form>
         </dialog>

@@ -11,6 +11,9 @@ npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
 
+# Locally persisted API profile
+pet-api/perfil.json
+
 # Operating system files
 .DS_Store
 Thumbs.db

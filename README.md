@@ -15,3 +15,5 @@ O servidor fica disponível em `http://localhost:3000`.
 ## Disciplinas
 
 Use **+ Adicionar disciplina** para abrir o formulário. Clique em uma disciplina para editá-la; a janela pode ser fechada pelo botão **×**, pela tecla Esc ou clicando fora dela. A API usa `GET` e `POST` em `/api/disciplinas` e `PUT` e `DELETE` em `/api/disciplinas/:id`.
+
+Use **Informar endereço** abaixo das informações do curso para buscar um CEP pelo ViaCEP e salvar rua, número, complemento (opcional), bairro, cidade e UF no perfil. O perfil é gravado em `pet-api/perfil.json` para continuar disponível após recarregar a página ou reiniciar o servidor. Esse arquivo local é ignorado pelo Git.

@@ -50,7 +50,7 @@ body > div * {
 /* Foto + informações */
 body > div > div:first-child {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 25px;
     margin-bottom: 30px;
 }
@@ -96,9 +96,36 @@ li {
   margin-bottom: 8px;
 }
 
-/* Biografia */
-body > div > p {
+.sobre-editor p {
   line-height: 1.6;
+  cursor: pointer;
+}
+
+.sobre-editor textarea {
+  display: block;
+  width: 100%;
+  min-height: 180px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: inherit;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.sobre-editor [hidden] {
+  display: none;
+}
+
+.sobre-acoes {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+#salvar-sobre {
+  padding: 7px 12px;
+  font-size: 13px;
 }
 
 /* Links */
@@ -140,9 +167,9 @@ footer {
 .disciplinas {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 6px;
     padding: 0;
-    margin: 16px 0 20px;
+    margin: 12px 0 16px;
     list-style: none;
 }
 
@@ -151,12 +178,13 @@ footer {
 }
 
 .disciplina-editar {
-    padding: 7px 14px;
+    padding: 5px 10px;
     border: 0;
     border-radius: 20px;
     background-color: #e9ecef;
     color: #333;
     font: inherit;
+    font-size: 13px;
     cursor: pointer;
 }
 
@@ -172,6 +200,11 @@ footer {
     color: white;
     font: inherit;
     cursor: pointer;
+}
+
+#abrir-form-disciplina {
+    padding: 7px 12px;
+    font-size: 13px;
 }
 
 .botao-disciplina:hover {
@@ -225,6 +258,45 @@ dialog form > input {
     border: 1px solid #ccc;
     border-radius: 6px;
     font: inherit;
+}
+
+#abrir-modal-endereco {
+    margin-top: 12px;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+#cep-salvo {
+    margin: 8px 0 0;
+    color: #666;
+    font-size: 12px;
+}
+
+.campo-cep {
+    display: flex;
+    gap: 8px;
+}
+
+.campo-cep input {
+    flex: 1;
+    min-width: 0;
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font: inherit;
+}
+
+#status-endereco {
+    min-height: 1.2em;
+    margin: 12px 0;
+    color: #b00020;
+}
+
+#salvar-endereco:disabled,
+#buscar-cep:disabled {
+    cursor: wait;
+    opacity: 0.7;
 }
 
 #erro-disciplina {
@@ -413,6 +485,18 @@ body.tema-escuro dialog {
 }
 
 body.tema-escuro dialog form > input {
+    background-color: #333333;
+    color: #eeeeee;
+    border-color: #555555;
+}
+
+body.tema-escuro .sobre-editor textarea {
+    background-color: #333333;
+    color: #eeeeee;
+    border-color: #555555;
+}
+
+body.tema-escuro .campo-cep input {
     background-color: #333333;
     color: #eeeeee;
     border-color: #555555;
