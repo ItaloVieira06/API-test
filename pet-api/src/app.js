@@ -1,0 +1,13 @@
+const express = require("express");
+const path = require("node:path");
+const disciplinasRoutes = require("./routes/disciplinasRoutes");
+const perfilRoutes = require("./routes/perfilRoutes");
+
+const app = express();
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "..", "public")));
+app.use("/api/disciplinas", disciplinasRoutes);
+app.use("/api/perfil", perfilRoutes);
+
+module.exports = app;

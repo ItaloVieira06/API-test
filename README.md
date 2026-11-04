@@ -12,6 +12,23 @@ npm run dev
 
 O servidor fica disponível em `http://localhost:3000`.
 
+## Estrutura do projeto
+
+```text
+pet-api/
+├── public/
+│   ├── assets/
+│   ├── js/                  # Módulos da interface
+│   ├── index.html
+│   └── style.css
+└── src/
+    ├── controllers/         # Validação e respostas HTTP
+    ├── repositories/        # Acesso e armazenamento dos dados
+    ├── routes/              # Rotas da API
+    ├── app.js               # Configuração do Express
+    └── server.js            # Inicialização do servidor
+```
+
 ## Disciplinas
 
 Use **+ Adicionar disciplina** para abrir o formulário. Clique em uma disciplina para editá-la; a janela pode ser fechada pelo botão **×**, pela tecla Esc ou clicando fora dela. A API usa `GET` e `POST` em `/api/disciplinas` e `PUT` e `DELETE` em `/api/disciplinas/:id`.
