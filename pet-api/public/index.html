@@ -57,11 +57,11 @@
                     <button id="abrir-modal-endereco" class="botao-disciplina" type="button">Informar endereço</button>
                 </div>
 
-                <div class="hobbies">
-                    <span>Programação</span>
-                    <span>Fotografia</span>
-                    <span>Jogos</span>
-                </div>
+                <section class="hobbies" aria-label="Hobbies">
+                    <ul class="disciplinas" id="lista-hobbies" aria-label="Lista de hobbies"></ul>
+                    <button id="abrir-form-hobby" class="botao-disciplina" type="button">+ Adicionar hobby</button>
+                    <p id="erro-lista-hobbies" class="erro-lista" role="alert" aria-live="polite"></p>
+                </section>
 
             </div>
         </div>
@@ -156,6 +156,23 @@
                 <div class="acoes-modal">
                     <button id="excluir-disciplina" class="botao-excluir" type="button" hidden>Excluir</button>
                     <button id="salvar-disciplina" class="botao-disciplina" type="submit">Adicionar</button>
+                </div>
+            </form>
+        </dialog>
+        <dialog id="modal-hobby" aria-labelledby="titulo-modal-hobby">
+            <form id="form-hobby">
+                <div class="cabecalho-modal">
+                    <h2 id="titulo-modal-hobby">Adicionar hobby</h2>
+                    <button id="fechar-modal-hobby" class="fechar-modal" type="button"
+                        aria-label="Fechar janela">×</button>
+                </div>
+                <input id="id-hobby" name="id" type="hidden" />
+                <label for="nome-hobby">Nome</label>
+                <input id="nome-hobby" name="nome" type="text" maxlength="80" required />
+                <p id="erro-hobby" role="alert" aria-live="polite"></p>
+                <div class="acoes-modal">
+                    <button id="excluir-hobby" class="botao-excluir" type="button" hidden>Excluir</button>
+                    <button id="salvar-hobby" class="botao-disciplina" type="submit">Adicionar</button>
                 </div>
             </form>
         </dialog>

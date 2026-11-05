@@ -312,20 +312,9 @@ footer {
   font-size: 14px;
 }
 
-/* Tags de hobbies */
+/* Hobbies */
 .hobbies {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.hobbies span {
-  padding: 7px 14px;
-  background-color: #e9ecef;
-  border-radius: 20px;
-  font-size: 14px;
-  color: #333;
+    margin-top: 20px;
 }
 
 .disciplinas {
@@ -369,6 +358,16 @@ footer {
 #abrir-form-disciplina {
     padding: 7px 12px;
     font-size: 13px;
+}
+
+#abrir-form-hobby {
+    padding: 7px 12px;
+    font-size: 13px;
+}
+
+#abrir-form-hobby:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .botao-disciplina:hover {
@@ -771,11 +770,6 @@ body.tema-escuro #tema-btn {
 
 body.tema-escuro h2 {
     border-bottom-color: #333333;
-}
-
-body.tema-escuro .hobbies span {
-    background-color: #333333;
-    color: #eeeeee;
 }
 
 body.tema-escuro .disciplina-editar {

@@ -5,6 +5,10 @@ const path = require("node:path");
 const { after, before, test } = require("node:test");
 const { PERFIL_PADRAO } = require("../src/models/objetos");
 
+const IMAGEM_PNG_TESTE = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lQUAAAAASUVORK5CYII=",
+  "base64"
+);
 let app;
 let servidor;
 let urlBase;
@@ -17,10 +21,7 @@ before(async () => {
   arquivoPerfilTemporario = path.join(diretorioTemporario, "perfil.json");
   diretorioAssetsTemporario = path.join(diretorioTemporario, "assets");
   await fs.mkdir(diretorioAssetsTemporario);
-  await fs.copyFile(
-    path.join(__dirname, "..", "public", "assets", "Tizil.png"),
-    path.join(diretorioAssetsTemporario, "Tizil.png")
-  );
+  await fs.writeFile(path.join(diretorioAssetsTemporario, "Tizil.png"), IMAGEM_PNG_TESTE);
   await fs.writeFile(arquivoPerfilTemporario, JSON.stringify({ endereco: null }));
   process.env.PERFIL_ARQUIVO = arquivoPerfilTemporario;
   process.env.PERFIL_ASSETS_DIRETORIO = diretorioAssetsTemporario;
@@ -95,6 +96,62 @@ test("expõe a interface e os contratos da API", async () => {
   assert.equal(exclusao.status, 200);
   const aposExclusao = await fetch(`${urlBase}/api/disciplinas/${disciplinaCriada.id}`);
   assert.equal(aposExclusao.status, 404);
+
+  const hobbiesIniciais = await fetch(`${urlBase}/api/hobbies`);
+  assert.equal(hobbiesIniciais.status, 200);
+  assert.deepEqual((await hobbiesIniciais.json()).map((hobby) => hobby.nome), [
+    "Programação",
+    "Fotografia",
+    "Jogos"
+  ]);
+  const hobbyInicial = await fetch(`${urlBase}/api/hobbies/1`);
+  assert.equal((await hobbyInicial.json()).nome, "Programação");
+  const hobbyInexistente = await fetch(`${urlBase}/api/hobbies/999999`);
+  assert.equal(hobbyInexistente.status, 404);
+
+  const hobbyInvalido = await fetch(`${urlBase}/api/hobbies`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome: "   " })
+  });
+  assert.equal(hobbyInvalido.status, 400);
+  const hobbyCriado = await fetch(`${urlBase}/api/hobbies`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome: "  Leitura  " })
+  });
+  assert.equal(hobbyCriado.status, 201);
+  const hobbyNovo = await hobbyCriado.json();
+  assert.equal(hobbyNovo.nome, "Leitura");
+  const quintoHobby = await fetch(`${urlBase}/api/hobbies`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome: "Ciclismo" })
+  });
+  assert.equal(quintoHobby.status, 201);
+  assert.equal((await (await fetch(`${urlBase}/api/hobbies`)).json()).length, 5);
+  const hobbyAcimaDoLimite = await fetch(`${urlBase}/api/hobbies`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome: "Cinema" })
+  });
+  assert.equal(hobbyAcimaDoLimite.status, 400);
+  assert.match((await hobbyAcimaDoLimite.json()).erro, /limite de 5 hobbies/i);
+
+  const hobbyAtualizado = await fetch(`${urlBase}/api/hobbies/${hobbyNovo.id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome: "Ciclismo" })
+  });
+  assert.equal((await hobbyAtualizado.json()).nome, "Ciclismo");
+  const hobbyExcluido = await fetch(`${urlBase}/api/hobbies/${hobbyNovo.id}`, {
+    method: "DELETE"
+  });
+  assert.equal((await hobbyExcluido.json()).nome, "Ciclismo");
+  assert.equal(
+    (await fetch(`${urlBase}/api/hobbies/${hobbyNovo.id}`)).status,
+    404
+  );
 
   const perfilInicial = await fetch(`${urlBase}/api/perfil`);
   assert.equal(perfilInicial.status, 200);
@@ -364,7 +421,7 @@ test("importa, limita e seleciona fotos de perfil", async () => {
   assert.equal(fotosIniciais.status, 200);
   assert.deepEqual((await fotosIniciais.json()).map((foto) => foto.src), [PERFIL_PADRAO.foto]);
 
-  const imagemPng = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lQUAAAAASUVORK5CYII=";
+  const imagemPng = IMAGEM_PNG_TESTE.toString("base64");
   const arquivoInvalido = await fetch(`${urlBase}/api/perfil/fotos`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -392,7 +449,7 @@ test("importa, limita e seleciona fotos de perfil", async () => {
   );
   assert.deepEqual(
     await fs.readFile(path.join(diretorioAssetsTemporario, nomeFotoImportada)),
-    Buffer.from(imagemPng, "base64")
+    IMAGEM_PNG_TESTE
   );
 
   const importacoesConcorrentes = await Promise.all(

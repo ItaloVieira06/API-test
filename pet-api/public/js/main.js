@@ -1,4 +1,5 @@
 import { carregarDisciplinas } from "./disciplinas.js";
+import { carregarHobbies } from "./hobbies.js";
 import { inicializarInterface } from "./interface.js";
 import {
   carregarPerfil,
@@ -14,7 +15,8 @@ async function carregarDadosIniciais() {
   try {
     await Promise.all([
       carregarPerfil(),
-      carregarDisciplinas()
+      carregarDisciplinas(),
+      carregarHobbies()
     ]);
   } finally {
     indicadorCarregamento.hidden = true;

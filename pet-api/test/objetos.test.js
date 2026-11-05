@@ -4,7 +4,8 @@ const {
   PERFIL_PADRAO,
   criarPerfil,
   criarEndereco,
-  criarDisciplina
+  criarDisciplina,
+  criarHobby
 } = require("../src/models/objetos");
 
 test("fábricas produzem formatos consistentes para os objetos JSON da API", () => {
@@ -71,5 +72,9 @@ test("fábricas produzem formatos consistentes para os objetos JSON da API", () 
     id: 1,
     nome: "Banco de Dados",
     semestre: 3
+  });
+  assert.deepEqual(criarHobby({ id: 1, nome: "Fotografia" }), {
+    id: 1,
+    nome: "Fotografia"
   });
 });

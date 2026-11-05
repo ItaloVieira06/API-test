@@ -6,6 +6,12 @@
  */
 
 /**
+ * @typedef {Object} Hobby
+ * @property {number} id
+ * @property {string} nome
+ */
+
+/**
  * @typedef {Object} Endereco
  * @property {string} cep
  * @property {string} logradouro
@@ -119,10 +125,19 @@ function criarDisciplina(dados) {
   };
 }
 
+/**
+ * @param {Hobby} dados
+ * @returns {Hobby}
+ */
+function criarHobby(dados) {
+  return { id: dados.id, nome: dados.nome };
+}
+
 module.exports = {
   PERFIL_PADRAO,
   criarPerfil,
   criarEndereco,
   REDES_SOCIAIS_PADRAO,
-  criarDisciplina
+  criarDisciplina,
+  criarHobby
 };

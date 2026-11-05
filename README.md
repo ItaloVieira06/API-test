@@ -1,6 +1,6 @@
-# Sistema Acadêmico — API de perfil e disciplinas
+# Sistema Acadêmico — API de perfil, disciplinas e hobbies
 
-Aplicação web simples para consultar e manter disciplinas e informações de perfil acadêmico. A interface é servida pela própria API e usa o ViaCEP para consultar endereços pelo CEP.
+Aplicação web simples para consultar e manter disciplinas, hobbies e informações de perfil acadêmico. A interface é servida pela própria API e usa o ViaCEP para consultar endereços pelo CEP.
 
 ## Tecnologias e requisitos
 
@@ -61,31 +61,27 @@ pet-api/
 └── perfil.json             # Persistência local, criada/atualizada pela API
 ```
 
-Os typedefs JSDoc e as fábricas para `Perfil`, `Endereco` e `Disciplina` ficam em `src/models/objetos.js`. Controllers e repositórios usam essas fábricas para manter a estrutura dos objetos JSON consistente.
+Os typedefs JSDoc e as fábricas para `Perfil`, `Endereco`, `Disciplina` e `Hobby` ficam em `src/models/objetos.js`. Controllers e repositórios usam essas fábricas para manter a estrutura dos objetos JSON consistente.
 
 ## API
 
-Todas as respostas da API são JSON. Nas requisições com corpo, envie o cabeçalho `Content-Type: application/json`. O parâmetro `:id` identifica uma disciplina e deve ser numérico.
+Todas as respostas da API são JSON. Nas requisições com corpo, envie o cabeçalho `Content-Type: application/json`. O parâmetro `:id` identifica um item e deve ser numérico.
 
-### Disciplinas
+### Disciplinas e hobbies
 
-#### Listar disciplinas
+Ambos os recursos oferecem as mesmas operações CRUD. Use `/api/disciplinas` ou `/api/hobbies`, respectivamente:
 
-`GET /api/disciplinas`
+| Operação | Rota | Corpo |
+|---|---|---|
+| Listar | `GET /api/{disciplinas\|hobbies}` | — |
+| Consultar | `GET /api/{disciplinas\|hobbies}/:id` | — |
+| Criar | `POST /api/{disciplinas\|hobbies}` | Disciplina: `nome`, `semestre`; hobby: `nome` |
+| Atualizar | `PUT /api/{disciplinas\|hobbies}/:id` | Mesmos campos de criar |
+| Excluir | `DELETE /api/{disciplinas\|hobbies}/:id` | — |
 
-Retorna `200` e uma lista de disciplinas.
+As rotas retornam `200` para consulta, atualização e exclusão, `201` ao criar, `400` para dados inválidos e `404` quando o item não existe. O nome é obrigatório, não pode ficar vazio e deve ter até 80 caracteres. Nas disciplinas, o semestre deve ser um inteiro maior que zero.
 
-#### Consultar uma disciplina
-
-`GET /api/disciplinas/:id`
-
-Retorna `200` e a disciplina solicitada. Se o identificador não existir, retorna `404`.
-
-#### Criar uma disciplina
-
-`POST /api/disciplinas`
-
-Envie `nome` e `semestre` no corpo da requisição:
+Exemplo de criação de disciplina:
 
 ```json
 {
@@ -93,20 +89,6 @@ Envie `nome` e `semestre` no corpo da requisição:
   "semestre": 3
 }
 ```
-
-Retorna `201` e a disciplina criada. O nome é obrigatório e não pode ficar vazio; o semestre deve ser um número inteiro maior que zero. Dados inválidos retornam `400`.
-
-#### Atualizar uma disciplina
-
-`PUT /api/disciplinas/:id`
-
-O corpo segue o mesmo formato da criação. Retorna `200` e a disciplina atualizada, `400` para dados inválidos e `404` se a disciplina não existir.
-
-#### Excluir uma disciplina
-
-`DELETE /api/disciplinas/:id`
-
-Retorna `200` e a disciplina removida. Se o identificador não existir, retorna `404`.
 
 O nome enviado é removido de espaços nas extremidades. As respostas de disciplina seguem o formato:
 
@@ -117,6 +99,8 @@ O nome enviado é removido de espaços nas extremidades. As respostas de discipl
   "semestre": 3
 }
 ```
+
+Os hobbies são exibidos como itens interativos no perfil. Use **Adicionar hobby** para criar um; clique em um hobby para editá-lo ou excluí-lo.
 
 ### Perfil
 
@@ -191,8 +175,8 @@ Um endereço com formato inválido retorna `400`. Na interface, os dados são pr
 
 - **Perfil:** salvo em `pet-api/perfil.json` e mantido entre reinicializações. Esse arquivo local é ignorado pelo Git. Para escolher outro caminho, defina `PERFIL_ARQUIVO` no ambiente antes de iniciar o servidor.
 - **Perfil sem dados pré-carregados:** nome, curso e instituição começam com **Insira seu nome**, **Insira seu Curso** e **Insira sua Instituição**. O endereço começa vazio e pode ser adicionado pelo botão. As alterações do perfil são gravadas em `pet-api/perfil.json` e permanecem após recarregar ou reiniciar a aplicação.
-- **Disciplinas:** mantidas somente em memória; alterações são perdidas quando o processo do servidor é reiniciado.
+- **Disciplinas e hobbies:** mantidos somente em memória; alterações são perdidas quando o processo do servidor é reiniciado.
 - **Porta:** `PORT`, com padrão `3000`.
 - **CEP:** a consulta é feita pelo navegador ao serviço externo ViaCEP; é necessária conexão à internet para essa funcionalidade.
 
-O projeto é uma aplicação acadêmica/local: não possui autenticação nem banco de dados para as disciplinas.
+O projeto é uma aplicação acadêmica/local: não possui autenticação nem banco de dados para disciplinas ou hobbies.
