@@ -23,6 +23,7 @@
  * @property {string} instituicao
  * @property {string} sobre
  * @property {string} email
+ * @property {string} foto
  * @property {Endereco|null} endereco
  * @property {Object<string, {nome: string, url: string}>} redesSociais
  */
@@ -39,6 +40,7 @@ const PERFIL_PADRAO = Object.freeze({
   instituicao: "Insira sua Instituição",
   sobre: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32. The standard chunk of Lorem Ipsum used since 1966 is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.",
   email: "",
+  foto: "/assets/Tizil.png",
   endereco: null,
   redesSociais: REDES_SOCIAIS_PADRAO
 });
@@ -80,6 +82,10 @@ function criarPerfil(dados = {}) {
       : PERFIL_PADRAO.instituicao,
     sobre: typeof dados.sobre === "string" ? dados.sobre : PERFIL_PADRAO.sobre,
     email: typeof dados.email === "string" ? dados.email.trim() : PERFIL_PADRAO.email,
+    foto: typeof dados.foto === "string"
+      && /^\/assets\/[A-Za-z0-9._-]+\.(?:png|jpe?g|gif|webp|bmp|avif)$/i.test(dados.foto)
+      ? dados.foto
+      : PERFIL_PADRAO.foto,
     endereco: dados.endereco || null,
     redesSociais
   };

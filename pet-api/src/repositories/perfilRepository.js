@@ -27,4 +27,8 @@ async function salvarPerfil(perfilAtualizado) {
   return perfil;
 }
 
-module.exports = { obterPerfil, salvarPerfil };
+async function salvarFotoPerfil(foto) {
+  return salvarPerfil({ ...perfil, foto });
+}
+
+module.exports = { obterPerfil, salvarPerfil, salvarFotoPerfil };

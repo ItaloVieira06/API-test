@@ -11,6 +11,13 @@ const rotuloCepsEncontrados = document.getElementById("rotulo-ceps-encontrados")
 const botaoSalvarEndereco = document.getElementById("salvar-endereco");
 const statusEndereco = document.getElementById("status-endereco");
 const enderecoVisivel = document.getElementById("cep-salvo");
+const fotoPerfil = document.getElementById("foto-perfil");
+const modalFotoPerfil = document.getElementById("modal-foto-perfil");
+const galeriaFotosPerfil = document.getElementById("galeria-fotos-perfil");
+const arquivoFotoPerfil = document.getElementById("arquivo-foto-perfil");
+const botaoImportarFotoPerfil = document.getElementById("importar-foto-perfil");
+const statusFotoPerfil = document.getElementById("status-foto-perfil");
+const botaoSalvarFotoPerfil = document.getElementById("salvar-foto-perfil");
 const linkPesquisaGoogle = document.getElementById("pesquisar-instituicao-google");
 const ajudaPesquisaInstituicao = document.getElementById("ajuda-pesquisa-instituicao");
 const modalRedeSocial = document.getElementById("modal-rede-social");
@@ -36,12 +43,171 @@ const botaoEnviarEmail = document.getElementById("enviar-email");
 let perfilAtual = null;
 let enderecoConsultado = null;
 let resultadosBuscaCep = [];
+let fotoSelecionada = "";
+let fotoProntaParaSalvar = false;
 let editorAtivo = null;
 let redeSocialAtiva = null;
 
 function emailValido(email) {
   return typeof email === "string" && email.length <= 254
     && /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email.trim());
+}
+
+function renderizarGaleriaFotos(fotos) {
+  galeriaFotosPerfil.replaceChildren();
+  for (const [indice, foto] of fotos.entries()) {
+    const opcao = document.createElement("button");
+    opcao.type = "button";
+    opcao.className = "foto-opcao";
+    opcao.classList.toggle("selecionada", foto.src === fotoSelecionada);
+    opcao.setAttribute("aria-pressed", String(foto.src === fotoSelecionada));
+    opcao.setAttribute("aria-label", `Selecionar foto ${indice + 1}`);
+
+    const imagem = document.createElement("img");
+    imagem.src = foto.src;
+    imagem.alt = "";
+
+    const nome = document.createElement("span");
+    nome.textContent = foto.nome;
+    opcao.append(imagem, nome);
+    opcao.addEventListener("click", () => {
+      fotoSelecionada = foto.src;
+      fotoProntaParaSalvar = true;
+      botaoSalvarFotoPerfil.disabled = false;
+      statusFotoPerfil.textContent = "Foto selecionada. Salve para aplicar ao perfil.";
+      renderizarGaleriaFotos(fotos);
+    });
+    galeriaFotosPerfil.append(opcao);
+  }
+
+  if (fotos.length === 0) {
+    const mensagem = document.createElement("p");
+    mensagem.textContent = "Ainda não há fotos na galeria. Importe uma imagem para começar.";
+    galeriaFotosPerfil.append(mensagem);
+  }
+}
+
+async function abrirEditorFotoPerfil() {
+  statusFotoPerfil.textContent = "";
+  fotoProntaParaSalvar = false;
+  botaoSalvarFotoPerfil.disabled = true;
+  modalFotoPerfil.showModal();
+
+  try {
+    if (!perfilAtual) {
+      perfilAtual = normalizarPerfil(await requisitarJson("/api/perfil"));
+    }
+    fotoSelecionada = perfilAtual.foto;
+    const fotos = await requisitarJson("/api/perfil/fotos");
+    renderizarGaleriaFotos(fotos);
+    statusFotoPerfil.textContent = "Escolha uma foto e salve para atualizar seu perfil.";
+  } catch (erro) {
+    console.error("Erro ao carregar galeria de fotos:", erro);
+    statusFotoPerfil.textContent = erro instanceof Error
+      ? erro.message
+      : "Não foi possível carregar as fotos de perfil.";
+  }
+}
+
+async function importarFotoPerfil() {
+  const arquivo = arquivoFotoPerfil.files?.[0];
+  if (!arquivo) {
+    return;
+  }
+
+  statusFotoPerfil.textContent = "";
+  if (arquivo.size > 5 * 1024 * 1024) {
+    statusFotoPerfil.textContent = "Escolha uma imagem de até 5 MB.";
+    arquivoFotoPerfil.value = "";
+    return;
+  }
+
+  botaoImportarFotoPerfil.disabled = true;
+  botaoSalvarFotoPerfil.disabled = true;
+  try {
+    if (!perfilAtual) {
+      perfilAtual = normalizarPerfil(await requisitarJson("/api/perfil"));
+    }
+    const dadosUrl = await new Promise((resolve, reject) => {
+      const leitor = new FileReader();
+      leitor.addEventListener("load", () => resolve(leitor.result));
+      leitor.addEventListener("error", () => reject(new Error("Não foi possível ler o arquivo.")));
+      leitor.readAsDataURL(arquivo);
+    });
+    if (typeof dadosUrl !== "string" || !dadosUrl.startsWith("data:")) {
+      throw new Error("O arquivo selecionado não pôde ser lido como imagem.");
+    }
+
+    const resposta = await requisitarJson("/api/perfil/fotos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipo: arquivo.type,
+        base64: dadosUrl.slice(dadosUrl.indexOf(",") + 1)
+      })
+    });
+    perfilAtual.foto = resposta.fotoAtual;
+    fotoPerfil.src = resposta.fotoAtual;
+    fotoSelecionada = resposta.foto;
+    fotoProntaParaSalvar = true;
+    botaoSalvarFotoPerfil.disabled = false;
+    renderizarGaleriaFotos(resposta.fotos);
+    statusFotoPerfil.textContent =
+      "Imagem adicionada à galeria. Salve para usá-la no perfil.";
+  } catch (erro) {
+    console.error("Erro ao importar foto de perfil:", erro);
+    statusFotoPerfil.textContent = erro instanceof Error
+      ? erro.message
+      : "Não foi possível importar a imagem.";
+  } finally {
+    arquivoFotoPerfil.value = "";
+    botaoImportarFotoPerfil.disabled = false;
+    botaoSalvarFotoPerfil.disabled = !fotoProntaParaSalvar;
+  }
+}
+
+async function salvarFotoPerfil() {
+  if (!fotoSelecionada || !fotoProntaParaSalvar) {
+    statusFotoPerfil.textContent = "Selecione uma foto antes de salvar.";
+    return;
+  }
+
+  botaoSalvarFotoPerfil.disabled = true;
+  statusFotoPerfil.textContent = "";
+  try {
+    const perfilSalvo = await requisitarJson("/api/perfil/foto", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ foto: fotoSelecionada })
+    });
+    perfilAtual = normalizarPerfil(perfilSalvo);
+    fotoPerfil.src = perfilAtual.foto;
+    modalFotoPerfil.close();
+  } catch (erro) {
+    console.error("Erro ao salvar foto de perfil:", erro);
+    statusFotoPerfil.textContent = erro instanceof Error
+      ? erro.message
+      : "Não foi possível salvar a foto de perfil.";
+    botaoSalvarFotoPerfil.disabled = false;
+  }
+}
+
+export function inicializarEditorFotoPerfil() {
+  document.getElementById("abrir-modal-foto-perfil")
+    .addEventListener("click", () => void abrirEditorFotoPerfil());
+  document.getElementById("fechar-modal-foto-perfil")
+    .addEventListener("click", () => modalFotoPerfil.close());
+  document.getElementById("cancelar-foto-perfil")
+    .addEventListener("click", () => modalFotoPerfil.close());
+  botaoImportarFotoPerfil
+    .addEventListener("click", () => arquivoFotoPerfil.click());
+  arquivoFotoPerfil.addEventListener("change", () => void importarFotoPerfil());
+  botaoSalvarFotoPerfil.addEventListener("click", () => void salvarFotoPerfil());
+  modalFotoPerfil.addEventListener("click", (evento) => {
+    if (evento.target === modalFotoPerfil) {
+      modalFotoPerfil.close();
+    }
+  });
 }
 
 const redesSociaisPadrao = {
@@ -787,6 +953,7 @@ export async function carregarPerfil() {
   try {
     const perfilRecebido = await requisitarJson("/api/perfil");
     perfilAtual = normalizarPerfil(perfilRecebido);
+    fotoPerfil.src = perfilAtual.foto;
     for (const editor of editoresPerfil) {
       editor.valor.textContent = perfilAtual[editor.campo];
     }

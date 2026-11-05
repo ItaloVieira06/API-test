@@ -5,7 +5,7 @@ const perfilRoutes = require("./routes/perfilRoutes");
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({ limit: "7mb" }));
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/api/disciplinas", disciplinasRoutes);
 app.use("/api/perfil", perfilRoutes);

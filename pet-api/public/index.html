@@ -15,7 +15,10 @@
     <p id="carregando" role="status" aria-live="polite">Carregando...</p>
     <div>
         <div>
-            <img src="./assets/Tizil.png" alt="Foto do usuário" width="120" />
+            <button id="abrir-modal-foto-perfil" class="foto-perfil-botao" type="button"
+                aria-label="Editar foto de perfil" title="Clique para editar a foto de perfil">
+                <img id="foto-perfil" src="./assets/Tizil.png" alt="Foto do usuário" width="120" />
+            </button>
 
             <div>
                 <div class="perfil-editor">
@@ -99,9 +102,11 @@
         </div>
 
         <div class="votacao">
-            <button class="vote upvote" id="upvote">▲</button>
-            <span id="contador">0</span>
-            <button class="vote downvote" id="downvote">▼</button>
+            <button class="vote upvote" id="upvote" type="button" aria-label="Upvote"
+                title="Votação desabilitada" disabled>▲</button>
+            <span id="contador" aria-live="polite">0</span>
+            <button class="vote downvote" id="downvote" type="button" aria-label="Downvote"
+                title="Votação desabilitada" disabled>▼</button>
         </div>
 
         <div class="links">
@@ -195,6 +200,28 @@
                         endereço</button>
                 </div>
             </form>
+        </dialog>
+        <dialog id="modal-foto-perfil" aria-labelledby="titulo-modal-foto-perfil">
+            <section class="editor-foto-perfil">
+                <div class="cabecalho-modal">
+                    <h2 id="titulo-modal-foto-perfil">Escolha sua foto de perfil</h2>
+                    <button id="fechar-modal-foto-perfil" class="fechar-modal" type="button"
+                        aria-label="Fechar janela">×</button>
+                </div>
+                <p class="ajuda-foto-perfil">Escolha uma imagem da galeria ou traga uma nova para deixar seu perfil com a sua cara!</p>
+                <input id="arquivo-foto-perfil" type="file"
+                    accept="image/png,image/jpeg,image/gif,image/webp,image/bmp,image/avif" hidden />
+                <button id="importar-foto-perfil" class="botao-disciplina" type="button">
+                    📷 Escolher imagem do dispositivo
+                </button>
+                <p class="ajuda-foto-perfil">PNG, JPEG, GIF, WebP, BMP ou AVIF — até 5 MB. A galeria mantém as 5 imagens mais recentes.</p>
+                <div id="galeria-fotos-perfil" class="galeria-fotos-perfil" aria-label="Fotos disponíveis"></div>
+                <p id="status-foto-perfil" role="status" aria-live="polite"></p>
+                <div class="acoes-modal">
+                    <button id="cancelar-foto-perfil" class="botao-disciplina" type="button">Cancelar</button>
+                    <button id="salvar-foto-perfil" class="botao-disciplina" type="button" disabled>Salvar foto</button>
+                </div>
+            </section>
         </dialog>
         <dialog id="modal-rede-social" aria-labelledby="titulo-modal-rede-social">
             <form id="form-rede-social">

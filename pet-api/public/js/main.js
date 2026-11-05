@@ -4,7 +4,8 @@ import {
   carregarPerfil,
   inicializarEdicaoPerfil,
   inicializarEdicaoRedesSociais,
-  inicializarContatoPerfil
+  inicializarContatoPerfil,
+  inicializarEditorFotoPerfil
 } from "./perfil.js";
 
 async function carregarDadosIniciais() {
@@ -24,4 +25,5 @@ inicializarInterface();
 inicializarEdicaoPerfil();
 inicializarEdicaoRedesSociais();
 inicializarContatoPerfil();
+inicializarEditorFotoPerfil();
 carregarDadosIniciais();

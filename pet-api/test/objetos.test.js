@@ -15,6 +15,7 @@ test("fábricas produzem formatos consistentes para os objetos JSON da API", () 
     instituicao: PERFIL_PADRAO.instituicao,
     sobre: PERFIL_PADRAO.sobre,
     email: PERFIL_PADRAO.email,
+    foto: PERFIL_PADRAO.foto,
     endereco: null,
     redesSociais: PERFIL_PADRAO.redesSociais
   });

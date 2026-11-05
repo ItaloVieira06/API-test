@@ -10,12 +10,20 @@ let servidor;
 let urlBase;
 let diretorioTemporario;
 let arquivoPerfilTemporario;
+let diretorioAssetsTemporario;
 
 before(async () => {
   diretorioTemporario = await fs.mkdtemp(path.join(os.tmpdir(), "pet-api-test-"));
   arquivoPerfilTemporario = path.join(diretorioTemporario, "perfil.json");
+  diretorioAssetsTemporario = path.join(diretorioTemporario, "assets");
+  await fs.mkdir(diretorioAssetsTemporario);
+  await fs.copyFile(
+    path.join(__dirname, "..", "public", "assets", "Tizil.png"),
+    path.join(diretorioAssetsTemporario, "Tizil.png")
+  );
   await fs.writeFile(arquivoPerfilTemporario, JSON.stringify({ endereco: null }));
   process.env.PERFIL_ARQUIVO = arquivoPerfilTemporario;
+  process.env.PERFIL_ASSETS_DIRETORIO = diretorioAssetsTemporario;
 
   app = require("../src/app");
   servidor = app.listen(0, "127.0.0.1");
@@ -34,6 +42,7 @@ after(async () => {
     });
   }
   delete process.env.PERFIL_ARQUIVO;
+  delete process.env.PERFIL_ASSETS_DIRETORIO;
   if (diretorioTemporario) {
     await fs.rm(diretorioTemporario, { recursive: true, force: true });
   }
@@ -95,6 +104,7 @@ test("expõe a interface e os contratos da API", async () => {
   assert.equal(dadosPerfilInicial.instituicao, "Insira sua Instituição");
   assert.equal(dadosPerfilInicial.sobre, PERFIL_PADRAO.sobre);
   assert.equal(dadosPerfilInicial.email, "");
+  assert.equal(dadosPerfilInicial.foto, PERFIL_PADRAO.foto);
   assert.equal(dadosPerfilInicial.endereco, null);
   assert.deepEqual(dadosPerfilInicial.redesSociais, PERFIL_PADRAO.redesSociais);
   assert.equal(Object.hasOwn(dadosPerfilInicial, "instituicaoVerificada"), false);
@@ -205,6 +215,7 @@ test("expõe a interface e os contratos da API", async () => {
     curso: dadosPerfil.curso.trim(),
     instituicao: dadosPerfil.instituicao.trim(),
     email: dadosPerfil.email.trim(),
+    foto: PERFIL_PADRAO.foto,
     redesSociais: PERFIL_PADRAO.redesSociais
   };
   assert.deepEqual(await atualizacaoPerfil.json(), perfilAtualizado);
@@ -346,4 +357,80 @@ test("expõe a interface e os contratos da API", async () => {
   const perfilRecarregado = require("../src/repositories/perfilRepository").obterPerfil();
   assert.equal(perfilRecarregado.email, "pessoa@exemplo.com");
   assert.deepEqual(perfilRecarregado.redesSociais, redesSociaisAtualizadas);
+});
+
+test("importa, limita e seleciona fotos de perfil", async () => {
+  const fotosIniciais = await fetch(`${urlBase}/api/perfil/fotos`);
+  assert.equal(fotosIniciais.status, 200);
+  assert.deepEqual((await fotosIniciais.json()).map((foto) => foto.src), [PERFIL_PADRAO.foto]);
+
+  const imagemPng = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lQUAAAAASUVORK5CYII=";
+  const arquivoInvalido = await fetch(`${urlBase}/api/perfil/fotos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tipo: "image/svg+xml", base64: imagemPng })
+  });
+  assert.equal(arquivoInvalido.status, 400);
+
+  let ultimaImportacao;
+  for (let indice = 0; indice < 5; indice++) {
+    ultimaImportacao = await fetch(`${urlBase}/api/perfil/fotos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tipo: "image/png", base64: imagemPng })
+    });
+    assert.equal(ultimaImportacao.status, 201);
+  }
+
+  const resultadoImportacao = await ultimaImportacao.json();
+  assert.equal(resultadoImportacao.fotos.length, 5);
+  assert.equal(resultadoImportacao.removidas.includes(PERFIL_PADRAO.foto), true);
+  assert.notEqual(resultadoImportacao.fotoAtual, PERFIL_PADRAO.foto);
+  assert.equal((await fs.readdir(diretorioAssetsTemporario)).length, 5);
+  const nomeFotoImportada = decodeURIComponent(
+    resultadoImportacao.foto.slice("/assets/".length)
+  );
+  assert.deepEqual(
+    await fs.readFile(path.join(diretorioAssetsTemporario, nomeFotoImportada)),
+    Buffer.from(imagemPng, "base64")
+  );
+
+  const importacoesConcorrentes = await Promise.all(
+    Array.from({ length: 3 }, () => fetch(`${urlBase}/api/perfil/fotos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tipo: "image/png", base64: imagemPng })
+    }))
+  );
+  assert.ok(importacoesConcorrentes.every((resposta) => resposta.status === 201));
+  assert.equal((await (await fetch(`${urlBase}/api/perfil/fotos`)).json()).length, 5);
+  assert.equal((await fs.readdir(diretorioAssetsTemporario)).length, 5);
+
+  const fotosDisponiveis = await (await fetch(`${urlBase}/api/perfil/fotos`)).json();
+  const selecao = await fetch(`${urlBase}/api/perfil/foto`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ foto: fotosDisponiveis[0].src })
+  });
+  assert.equal(selecao.status, 200);
+  assert.equal((await selecao.json()).foto, fotosDisponiveis[0].src);
+
+  const atualizacaoPerfil = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "Curso atualizado",
+      instituicao: "Instituição de teste"
+    })
+  });
+  assert.equal(atualizacaoPerfil.status, 200);
+  assert.equal((await atualizacaoPerfil.json()).foto, fotosDisponiveis[0].src);
+
+  const fotoInexistente = await fetch(`${urlBase}/api/perfil/foto`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ foto: "/assets/nao-existe.png" })
+  });
+  assert.equal(fotoInexistente.status, 400);
 });

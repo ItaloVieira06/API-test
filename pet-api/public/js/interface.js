@@ -19,37 +19,6 @@ function inicializarTema() {
   });
 }
 
-function inicializarVotacao() {
-  const botaoPositivo = document.getElementById("upvote");
-  const botaoNegativo = document.getElementById("downvote");
-  const contador = document.getElementById("contador");
-  let votos = 0;
-
-  botaoPositivo.addEventListener("click", () => {
-    if (botaoPositivo.classList.contains("ativo")) {
-      votos--;
-      botaoPositivo.classList.remove("ativo");
-    } else {
-      votos++;
-      botaoPositivo.classList.add("ativo");
-      botaoNegativo.classList.remove("ativo");
-    }
-    contador.textContent = votos;
-  });
-
-  botaoNegativo.addEventListener("click", () => {
-    if (botaoNegativo.classList.contains("ativo")) {
-      votos++;
-      botaoNegativo.classList.remove("ativo");
-    } else {
-      votos--;
-      botaoNegativo.classList.add("ativo");
-      botaoPositivo.classList.remove("ativo");
-    }
-    contador.textContent = votos;
-  });
-}
-
 function inicializarEditorSobre() {
   const textoSobre = document.getElementById("texto-sobre");
   const campoSobre = document.getElementById("campo-sobre");
@@ -115,6 +84,5 @@ export function atualizarTextoSobre(texto) {
 export function inicializarInterface() {
   inicializarDataAtual();
   inicializarTema();
-  inicializarVotacao();
   inicializarEditorSobre();
 }

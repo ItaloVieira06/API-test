@@ -174,6 +174,10 @@ O texto **Sobre** também é editável e é persistido no perfil, permanecendo a
 
 `email` é opcional para atualizações da API; quando omitido, o valor salvo é mantido. Se informado, deve estar vazio ou ser um endereço válido com até 254 caracteres. Na interface, use **Editar** abaixo de **Entrar em contato** para definir o email do perfil. O botão de contato abre um formulário e prepara a mensagem no aplicativo de email padrão; a pessoa deve revisar e confirmar o envio nesse aplicativo. A aplicação não envia emails diretamente nem simula confirmação de envio.
 
+Na interface, clique na foto de perfil para abrir a galeria. É possível selecionar uma imagem existente ou importar PNG, JPEG, GIF, WebP, BMP ou AVIF de até 5 MB; a escolha só é aplicada ao perfil depois de clicar em **Salvar foto**. O diretório `public/assets/` mantém no máximo cinco imagens, removendo a mais antiga quando uma nova excede o limite.
+
+As fotos podem ser consultadas em `GET /api/perfil/fotos`, importadas em `POST /api/perfil/fotos` (JSON com `tipo` MIME e `base64`) e selecionadas em `PUT /api/perfil/foto` (JSON com `foto`, o caminho da imagem). O perfil inclui esse caminho no campo `foto`.
+
 `endereco` é opcional: pode ser omitido ou enviado como `null`. Quando informado, deve ser um objeto com:
 
 - `cep`: oito dígitos, com ou sem hífen (por exemplo, `01001000` ou `01001-000`); a API o armazena no formato `00000-000`.

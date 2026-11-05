@@ -140,6 +140,7 @@ async function atualizarPerfil(req, res) {
     instituicao: instituicao.trim(),
     sobre: sobreAtualizado.trim(),
     email: emailAtualizado.trim(),
+    foto: perfilRepository.obterPerfil().foto,
     endereco: enderecoSalvo,
     redesSociais: redesSociaisSalvas
   });
