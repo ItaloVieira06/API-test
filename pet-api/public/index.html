@@ -10,6 +10,7 @@
 
 <body>
     <nav class="navbar">
+        <a class="link-versao-cliente" href="/cliente.html">Visualizar versão cliente</a>
         <button id="tema-btn">🌙 Tema escuro</button>
     </nav>
     <p id="carregando" role="status" aria-live="polite">Carregando...</p>
@@ -73,6 +74,7 @@
         <h2>Sobre</h2>
 
         <div class="sobre-editor" id="sobre-editor">
+            <p class="instrucao-sobre">Clique no texto abaixo para editar o conteúdo de Sobre.</p>
             <p id="texto-sobre" role="button" tabindex="0" aria-label="Clique para editar o texto Sobre">
                 Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical
                 Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at
@@ -190,7 +192,7 @@
                         autocomplete="postal-code" placeholder="00000-000" required />
                     <button id="buscar-cep" class="botao-disciplina" type="button">Buscar</button>
                 </div>
-                <label for="rua-endereco">Rua</label>
+                <label for="rua-endereco">Rua/Avenida</label>
                 <input id="rua-endereco" name="logradouro" type="text" autocomplete="address-line1"
                     maxlength="120" required />
                 <label for="numero-endereco">Número</label>

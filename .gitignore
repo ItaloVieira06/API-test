@@ -13,6 +13,7 @@ pnpm-debug.log*
 
 # Locally persisted API profile
 pet-api/perfil.json
+pet-api/votos.json
 
 # Operating system files
 .DS_Store

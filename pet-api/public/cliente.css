@@ -1,0 +1,496 @@
+:root {
+    color-scheme: light;
+    font-family: Arial, sans-serif;
+    color: #333;
+    background: #f2f2f2;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 84px 20px 76px;
+}
+
+.navbar {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    height: 60px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+}
+
+.marca {
+    color: #333;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.marca:hover {
+    text-decoration: underline;
+}
+
+.marca:focus-visible {
+    outline: 3px dotted #0066cc;
+    outline-offset: 3px;
+}
+
+#tema-btn {
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f2f2f2;
+    color: #333;
+    font: inherit;
+    cursor: pointer;
+}
+
+#tema-btn:hover {
+    background: #e0e0e0;
+}
+
+.status-carregamento {
+    max-width: 760px;
+    margin: 0 auto 12px;
+    color: #555;
+}
+
+.status-carregamento[hidden] {
+    display: none;
+}
+
+.status-carregamento.erro {
+    color: #a32020;
+}
+
+.cartao-perfil {
+    width: min(760px, 100%);
+    margin: 0 auto;
+    padding: 36px;
+    overflow-wrap: anywhere;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgb(0 0 0 / 12%);
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    min-height: 54px;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 30px;
+    border-top: 1px solid #ddd;
+    background: #fff;
+    color: #777;
+    font-size: 14px;
+}
+
+footer p {
+    margin: 0;
+}
+
+.cabecalho-perfil {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.foto-perfil {
+    flex: 0 0 120px;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 3px solid #ddd;
+    border-radius: 50%;
+}
+
+.identidade {
+    min-width: 0;
+    flex: 1;
+}
+
+h1,
+h2,
+p {
+    margin-top: 0;
+}
+
+h1 {
+    margin-bottom: 8px;
+    font-size: clamp(1.6rem, 5vw, 2rem);
+}
+
+.formacao {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 8px;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+#separador-formacao {
+    margin: 0 2px;
+}
+
+.instituicao {
+    color: #606060;
+}
+
+.endereco {
+    margin-bottom: 6px;
+    color: #606060;
+    font-size: 0.9rem;
+}
+
+.secao {
+    padding-top: 22px;
+}
+
+.secao h2 {
+    margin-bottom: 12px;
+    font-size: 1.15rem;
+}
+
+.lista-itens,
+.lista-redes {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lista-itens li,
+.lista-redes li,
+.lista-hobbies li {
+    overflow-wrap: anywhere;
+}
+
+.lista-itens li {
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #f5f6fa;
+}
+
+.lista-hobbies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lista-hobbies li {
+    padding: 7px 12px;
+    border: 1px solid #d8d6ed;
+    border-radius: 999px;
+    background: #f5f3ff;
+}
+
+.sobre p {
+    margin-bottom: 8px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.links-perfil {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding-top: 12px;
+}
+
+.links-redes-sociais {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 18px;
+    margin-left: auto;
+}
+
+.votacao {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.link-perfil {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 14px;
+    border: 1px solid #c8c8d0;
+    border-radius: 8px;
+    background: #f5f6fa;
+    color: #4a4b7c;
+    font: inherit;
+    text-align: center;
+    text-decoration: none;
+}
+
+button.link-perfil {
+    cursor: pointer;
+}
+
+.link-perfil:hover {
+    border-color: #7567d8;
+    background: #f2f0ff;
+}
+
+.link-perfil:focus-visible {
+    outline: 3px dotted #0066cc;
+    outline-offset: 3px;
+}
+
+.modal-envio-email {
+    width: min(520px, calc(100% - 32px));
+    padding: 24px;
+    border: 0;
+    border-radius: 14px;
+    color: #333;
+    box-shadow: 0 8px 30px rgb(0 0 0 / 24%);
+}
+
+.modal-envio-email::backdrop {
+    background: rgb(0 0 0 / 45%);
+}
+
+.modal-envio-email form {
+    display: grid;
+    gap: 12px;
+}
+
+.cabecalho-modal-email {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cabecalho-modal-email h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.fechar-modal-email {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+.destinatario-email {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.modal-envio-email input,
+.modal-envio-email textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #c8c8d0;
+    border-radius: 7px;
+    font: inherit;
+}
+
+.modal-envio-email textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.acoes-modal-email {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.status-envio-email {
+    margin: 0;
+    color: #245c34;
+}
+
+.status-envio-email.erro {
+    color: #a32020;
+}
+
+.botao-voto {
+    width: 44px;
+    height: 40px;
+    border: 1px solid #c8c8d0;
+    border-radius: 9px;
+    background: #fff;
+    color: #4a4b7c;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.botao-voto:hover,
+.botao-voto.selecionado {
+    border-color: #7567d8;
+    background: #f2f0ff;
+}
+
+.botao-voto:focus-visible {
+    outline: 3px dotted #0066cc;
+    outline-offset: 3px;
+}
+
+.botao-voto:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+
+#pontuacao {
+    min-width: 2ch;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.status-votos {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.status-votos.erro {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    color: #a32020;
+    white-space: normal;
+}
+
+body.tema-escuro {
+    color-scheme: dark;
+    background: #121212;
+    color: #eee;
+}
+
+body.tema-escuro .navbar,
+body.tema-escuro footer {
+    border-color: #333;
+    background: #1e1e1e;
+}
+
+body.tema-escuro .marca,
+body.tema-escuro #tema-btn {
+    color: #eee;
+}
+
+body.tema-escuro #tema-btn {
+    border-color: #555;
+    background: #333;
+}
+
+body.tema-escuro #tema-btn:hover {
+    background: #444;
+}
+
+body.tema-escuro footer {
+    color: #aaa;
+}
+
+body.tema-escuro .status-carregamento {
+    color: #ccc;
+}
+
+body.tema-escuro .cartao-perfil,
+body.tema-escuro .modal-envio-email {
+    background: #1e1e1e;
+    color: #eee;
+}
+
+body.tema-escuro .cabecalho-perfil {
+    border-bottom-color: #333;
+}
+
+body.tema-escuro .instituicao,
+body.tema-escuro .endereco {
+    color: #bbb;
+}
+
+body.tema-escuro .lista-itens li,
+body.tema-escuro .link-perfil,
+body.tema-escuro .botao-voto {
+    border-color: #555;
+    background: #333;
+    color: #eee;
+}
+
+body.tema-escuro .lista-hobbies li {
+    border-color: #504878;
+    background: #302a45;
+}
+
+body.tema-escuro .link-perfil:hover,
+body.tema-escuro .botao-voto:hover,
+body.tema-escuro .botao-voto.selecionado {
+    border-color: #a89cff;
+    background: #403a5c;
+}
+
+body.tema-escuro .modal-envio-email input,
+body.tema-escuro .modal-envio-email textarea {
+    border-color: #555;
+    background: #333;
+    color: #eee;
+}
+
+@media (max-width: 560px) {
+    body {
+        padding: 80px 12px 72px;
+    }
+
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .cartao-perfil {
+        padding: 22px 18px;
+    }
+
+    .cabecalho-perfil {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .formacao {
+        justify-content: center;
+    }
+
+    .lista-hobbies {
+        justify-content: center;
+    }
+}

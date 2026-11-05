@@ -260,9 +260,30 @@ li {
   margin-bottom: 8px;
 }
 
-.sobre-editor p {
+.instrucao-sobre {
+  margin: 0 0 8px;
+  color: #666;
+  font-size: 13px;
+}
+
+.sobre-editor #texto-sobre {
+  margin: 0;
+  padding: 14px;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  background: #fafafa;
   line-height: 1.6;
   cursor: pointer;
+}
+
+.sobre-editor #texto-sobre:hover,
+.sobre-editor #texto-sobre:focus-visible {
+  border-color: #b8c5d6;
+}
+
+.sobre-editor #texto-sobre:focus-visible {
+  outline: 2px dotted #0066cc;
+  outline-offset: 2px;
 }
 
 .sobre-editor textarea {
@@ -730,6 +751,16 @@ footer p {
     z-index: 1000;
 }
 
+.link-versao-cliente {
+    margin-right: 18px;
+    color: #333;
+}
+
+.link-versao-cliente:focus-visible {
+    outline: 3px dotted #0066cc;
+    outline-offset: 3px;
+}
+
 #tema-btn {
     padding: 8px 14px;
 
@@ -766,6 +797,10 @@ body.tema-escuro #tema-btn {
     background-color: #333333;
     color: #eeeeee;
     border-color: #555555;
+}
+
+body.tema-escuro .link-versao-cliente {
+    color: #eeeeee;
 }
 
 body.tema-escuro h2 {
@@ -821,6 +856,24 @@ body.tema-escuro .sobre-editor textarea {
     background-color: #333333;
     color: #eeeeee;
     border-color: #555555;
+}
+
+body.tema-escuro .sobre-editor #texto-sobre {
+    background: #292929;
+    border-color: #444;
+}
+
+body.tema-escuro .sobre-editor #texto-sobre:hover,
+body.tema-escuro .sobre-editor #texto-sobre:focus-visible {
+    border-color: #777;
+}
+
+body.tema-escuro .sobre-editor #texto-sobre:focus-visible {
+    outline-color: #a89cff;
+}
+
+body.tema-escuro .instrucao-sobre {
+    color: #bbb;
 }
 
 body.tema-escuro .status-envio-email-info {

@@ -19,14 +19,14 @@ npm install
 npm run dev
 ```
 
-A aplicação fica disponível em `http://localhost:3000`. `npm start` inicia o mesmo servidor. A porta padrão pode ser alterada pela variável de ambiente `PORT`:
+A versão cliente fica disponível em `http://localhost:3010/cliente.html`; a raiz (`http://localhost:3010`) abre a página de edição. Na versão cliente, clique em **Meu Sistema Acadêmico** para voltar à edição. `npm start` inicia o mesmo servidor. A porta padrão pode ser alterada pela variável de ambiente `PORT`:
 
 ```powershell
 $env:PORT = "3002"
 npm start
 ```
 
-Abra a URL do servidor para usar a interface. O diretório `public/` contém os arquivos estáticos e `src/server.js` inicia o servidor Express.
+Abra a URL do servidor para usar a interface de edição. A opção **Visualizar versão cliente** ou `/cliente.html` abre a versão somente para visualização: curso e instituição aparecem juntos, os hobbies ficam abaixo do endereço e contato/redes sociais são exibidos como botões, sem controles de edição. **Entrar em Contato** abre um formulário de assunto e mensagem; ao continuar, o aplicativo de email padrão é aberto com o email cadastrado como destinatário para revisão e confirmação do envio. O diretório `public/` contém os arquivos estáticos e `src/server.js` inicia o servidor Express.
 
 ## Testes
 
@@ -100,7 +100,15 @@ O nome enviado é removido de espaços nas extremidades. As respostas de discipl
 }
 ```
 
-Os hobbies são exibidos como itens interativos no perfil. Use **Adicionar hobby** para criar um; clique em um hobby para editá-lo ou excluí-lo.
+Os hobbies são exibidos como itens interativos no perfil de edição. Use **Adicionar hobby** para criar um; clique em um hobby para editá-lo ou excluí-lo.
+
+### Votos
+
+`GET /api/votos` consulta a pontuação global e o voto da sessão atual; `POST /api/votos` registra ou alterna entre `up` e `down`. As duas rotas exigem o cabeçalho `X-Voter-Id` com um UUID de sessão. A versão cliente gera e mantém esse identificador em `sessionStorage`.
+
+Um voto novo altera a pontuação em +1 ou -1. Trocar o voto substitui seu efeito (up para down altera em -2; down para up, em +2). Clicar novamente no voto atual cancela o voto e desfaz sua contribuição na pontuação. A pontuação e os votos ativos são persistidos em `pet-api/votos.json`; votos de sessões inativas há mais de 30 dias deixam de poder ser alterados. O arquivo local é ignorado pelo Git e seu caminho pode ser configurado com `VOTOS_ARQUIVO`.
+
+O identificador do navegador distingue sessões, mas não é autenticação: sem contas ou verificação de identidade, a API não pode impedir que alguém limpe ou altere o identificador para votar novamente.
 
 ### Perfil
 

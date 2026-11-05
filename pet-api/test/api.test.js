@@ -14,16 +14,19 @@ let servidor;
 let urlBase;
 let diretorioTemporario;
 let arquivoPerfilTemporario;
+let arquivoVotosTemporario;
 let diretorioAssetsTemporario;
 
 before(async () => {
   diretorioTemporario = await fs.mkdtemp(path.join(os.tmpdir(), "pet-api-test-"));
   arquivoPerfilTemporario = path.join(diretorioTemporario, "perfil.json");
+  arquivoVotosTemporario = path.join(diretorioTemporario, "votos.json");
   diretorioAssetsTemporario = path.join(diretorioTemporario, "assets");
   await fs.mkdir(diretorioAssetsTemporario);
   await fs.writeFile(path.join(diretorioAssetsTemporario, "Tizil.png"), IMAGEM_PNG_TESTE);
   await fs.writeFile(arquivoPerfilTemporario, JSON.stringify({ endereco: null }));
   process.env.PERFIL_ARQUIVO = arquivoPerfilTemporario;
+  process.env.VOTOS_ARQUIVO = arquivoVotosTemporario;
   process.env.PERFIL_ASSETS_DIRETORIO = diretorioAssetsTemporario;
 
   app = require("../src/app");
@@ -43,6 +46,7 @@ after(async () => {
     });
   }
   delete process.env.PERFIL_ARQUIVO;
+  delete process.env.VOTOS_ARQUIVO;
   delete process.env.PERFIL_ASSETS_DIRETORIO;
   if (diretorioTemporario) {
     await fs.rm(diretorioTemporario, { recursive: true, force: true });
@@ -490,4 +494,89 @@ test("importa, limita e seleciona fotos de perfil", async () => {
     body: JSON.stringify({ foto: "/assets/nao-existe.png" })
   });
   assert.equal(fotoInexistente.status, 400);
+});
+
+test("serve a versão cliente sem controles de edição", async () => {
+  const pagina = await fetch(`${urlBase}/cliente.html`);
+  assert.equal(pagina.status, 200);
+  assert.match(pagina.headers.get("content-type"), /text\/html/);
+  const html = await pagina.text();
+  assert.match(html, /id="lista-disciplinas"/);
+  assert.match(html, /id="lista-hobbies"/);
+  assert.match(html, /id="curso-perfil"[\s\S]*id="separador-formacao"[\s\S]*id="instituicao-perfil"/);
+  assert.match(html, /id="endereco-perfil"[\s\S]*id="lista-hobbies"/);
+  assert.match(html, /id="links-perfil"/);
+  assert.match(html, /id="modal-envio-email"/);
+  assert.match(html, /id="destinatario-email"/);
+  assert.match(html, /id="assunto-email"/);
+  assert.match(html, /id="mensagem-email"/);
+  assert.match(html, /id="tema-btn"/);
+  assert.match(html, /© Ítalo do Espírito Santo Vieira <span id="data-atual"><\/span>/);
+  assert.match(html, /<a class="marca" href="\/">Meu Sistema Acadêmico<\/a>/);
+  assert.doesNotMatch(html, /id="email-perfil"|id="lista-redes"/);
+  assert.doesNotMatch(html, /Editar|Adicionar/i);
+  assert.equal((html.match(/<button\b/g) || []).length, 6);
+
+  const script = await fetch(`${urlBase}/js/cliente.js`);
+  assert.equal(script.status, 200);
+  const codigo = await script.text();
+  assert.match(codigo, /mailto:\$\{destinatario\}\?\$\{parametros\.toString\(\)\}/);
+  assert.match(codigo, /classList\.toggle\("tema-escuro"\)/);
+  assert.match(codigo, /resposta\.headers\.get\("content-type"\)/);
+  assert.match(codigo, /A API respondeu com conteúdo inesperado/);
+});
+
+test("mantém votos globais persistentes com troca e cancelamento", async () => {
+  const sessaoA = "1b2f6d7e-863f-4b3b-b45e-7adf7c27673a";
+  const sessaoB = "2c3f6d7e-863f-4b3b-b45e-7adf7c27673a";
+  const cabecalho = (id) => ({ "X-Voter-Id": id });
+  const enviarVoto = (id, voto) => fetch(`${urlBase}/api/votos`, {
+    method: "POST",
+    headers: { ...cabecalho(id), "Content-Type": "application/json" },
+    body: JSON.stringify({ voto })
+  });
+
+  const sessaoAusente = await fetch(`${urlBase}/api/votos`);
+  assert.equal(sessaoAusente.status, 400);
+  const votoInvalido = await enviarVoto(sessaoA, "neutral");
+  assert.equal(votoInvalido.status, 400);
+
+  const estadoInicial = await fetch(`${urlBase}/api/votos`, { headers: cabecalho(sessaoA) });
+  assert.deepEqual(await estadoInicial.json(), { pontuacao: 0, voto: null });
+
+  let resposta = await enviarVoto(sessaoA, "up");
+  assert.deepEqual(await resposta.json(), { pontuacao: 1, voto: "up" });
+
+  resposta = await enviarVoto(sessaoA, "up");
+  assert.deepEqual(await resposta.json(), { pontuacao: 0, voto: null });
+
+  resposta = await enviarVoto(sessaoA, "up");
+  assert.deepEqual(await resposta.json(), { pontuacao: 1, voto: "up" });
+
+  resposta = await enviarVoto(sessaoA, "down");
+  assert.deepEqual(await resposta.json(), { pontuacao: -1, voto: "down" });
+
+  resposta = await enviarVoto(sessaoB, "down");
+  assert.deepEqual(await resposta.json(), { pontuacao: -2, voto: "down" });
+
+  resposta = await enviarVoto(sessaoA, "up");
+  assert.deepEqual(await resposta.json(), { pontuacao: 0, voto: "up" });
+
+  const estadoSessaoB = await fetch(`${urlBase}/api/votos`, { headers: cabecalho(sessaoB) });
+  assert.deepEqual(await estadoSessaoB.json(), { pontuacao: 0, voto: "down" });
+
+  const persistido = JSON.parse(await fs.readFile(arquivoVotosTemporario, "utf8"));
+  assert.equal(persistido.pontuacao, 0);
+  assert.equal(persistido.sessoes[sessaoA].escolha, "up");
+  assert.equal(persistido.sessoes[sessaoB].escolha, "down");
+
+  const sessaoC = "3d4f6d7e-863f-4b3b-b45e-7adf7c27673a";
+  const sessaoD = "4e5f6d7e-863f-4b3b-b45e-7adf7c27673a";
+  const respostasConcorrentes = await Promise.all([
+    enviarVoto(sessaoC, "up"),
+    enviarVoto(sessaoD, "down")
+  ]);
+  assert.ok(respostasConcorrentes.every((resposta) => resposta.status === 200));
+  const estadoFinal = await fetch(`${urlBase}/api/votos`, { headers: cabecalho(sessaoC) });
+  assert.deepEqual(await estadoFinal.json(), { pontuacao: 0, voto: "up" });
 });

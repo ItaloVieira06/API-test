@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Visualização do perfil acadêmico." />
+    <title>Perfil acadêmico</title>
+    <link rel="stylesheet" href="cliente.css" />
+</head>
+<body>
+    <header class="cabecalho-site">
+        <nav class="navbar" aria-label="Navegação principal">
+            <a class="marca" href="/">Meu Sistema Acadêmico</a>
+            <button id="tema-btn" type="button" aria-pressed="false">🌙 Tema escuro</button>
+        </nav>
+    </header>
+    <p id="status-carregamento" class="status-carregamento" role="status" aria-live="polite">
+        Carregando perfil...
+    </p>
+    <main class="cartao-perfil">
+        <header class="cabecalho-perfil">
+            <img id="foto-perfil" class="foto-perfil" src="./assets/Tizil.png" alt="Foto do perfil" />
+            <div class="identidade">
+                <h1 id="nome-perfil">Perfil acadêmico</h1>
+                <p class="formacao">
+                    <span id="curso-perfil" class="curso"></span>
+                    <span id="separador-formacao" aria-hidden="true"> - </span>
+                    <span id="instituicao-perfil" class="instituicao"></span>
+                </p>
+                <p id="endereco-perfil" class="endereco"></p>
+                <ul id="lista-hobbies" class="lista-hobbies" aria-label="Hobbies"></ul>
+            </div>
+        </header>
+
+        <section class="secao" aria-labelledby="titulo-disciplinas">
+            <h2 id="titulo-disciplinas">Disciplinas</h2>
+            <ul id="lista-disciplinas" class="lista-itens"></ul>
+        </section>
+
+        <section class="secao sobre" aria-labelledby="titulo-sobre">
+            <h2 id="titulo-sobre">Sobre</h2>
+            <p id="texto-sobre"></p>
+        </section>
+
+        <section class="votacao" aria-label="Votação">
+            <button id="upvote" class="botao-voto upvote" type="button" aria-label="Upvote"
+                aria-pressed="false" disabled>▲</button>
+            <output id="pontuacao" aria-live="polite">0</output>
+            <button id="downvote" class="botao-voto downvote" type="button" aria-label="Downvote"
+                aria-pressed="false" disabled>▼</button>
+            <p id="status-votos" class="status-votos" role="status" aria-live="polite"></p>
+        </section>
+
+        <nav class="links-perfil" aria-label="Contato e redes sociais" id="links-perfil"></nav>
+    </main>
+    <footer>
+        <p>© Ítalo do Espírito Santo Vieira <span id="data-atual"></span></p>
+    </footer>
+    <dialog id="modal-envio-email" class="modal-envio-email" aria-labelledby="titulo-envio-email">
+        <form id="form-envio-email">
+            <header class="cabecalho-modal-email">
+                <h2 id="titulo-envio-email">Enviar email</h2>
+                <button id="fechar-modal-email" class="fechar-modal-email" type="button"
+                    aria-label="Fechar janela">×</button>
+            </header>
+            <p class="destinatario-email">Para: <span id="destinatario-email"></span></p>
+            <label for="assunto-email">Assunto</label>
+            <input id="assunto-email" name="assunto" type="text" maxlength="200" required />
+            <label for="mensagem-email">Mensagem</label>
+            <textarea id="mensagem-email" name="mensagem" maxlength="5000" required></textarea>
+            <p id="status-envio-email" class="status-envio-email" role="status" aria-live="polite" hidden></p>
+            <div class="acoes-modal-email">
+                <button id="cancelar-envio-email" class="link-perfil" type="button">Cancelar</button>
+                <button id="enviar-email" class="link-perfil" type="submit">Abrir aplicativo de email</button>
+            </div>
+        </form>
+    </dialog>
+    <script src="js/cliente.js" defer></script>
+</body>
+</html>
