@@ -2,7 +2,8 @@ const fs = require("node:fs");
 const fsPromises = require("node:fs/promises");
 const path = require("node:path");
 
-const ARQUIVO_PERFIL = path.join(__dirname, "..", "..", "perfil.json");
+const ARQUIVO_PERFIL = process.env.PERFIL_ARQUIVO
+  || path.join(__dirname, "..", "..", "perfil.json");
 const perfilPadrao = {
   nome: "Ítalo do Espírito Santo Vieira",
   curso: "Jogos Digitais",
