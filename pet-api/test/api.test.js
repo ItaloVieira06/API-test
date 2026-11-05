@@ -96,6 +96,34 @@ test("expõe a interface e os contratos da API", async () => {
   });
   assert.equal(atualizacaoPerfilInvalida.status, 400);
 
+  const enderecoInvalido = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "Jogos Digitais",
+      endereco: {
+        cep: "123",
+        logradouro: "Rua de teste",
+        bairro: "Centro",
+        localidade: "São Paulo",
+        uf: "SP"
+      }
+    })
+  });
+  assert.equal(enderecoInvalido.status, 400);
+
+  const enderecoIncompleto = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "Jogos Digitais",
+      endereco: { cep: "01001000" }
+    })
+  });
+  assert.equal(enderecoIncompleto.status, 400);
+
   const dadosPerfil = {
     nome: "Pessoa de teste",
     curso: "Jogos Digitais",
@@ -121,4 +149,20 @@ test("expõe a interface e os contratos da API", async () => {
   assert.deepEqual(perfilPersistido, dadosPerfil);
   const perfilConsultado = await fetch(`${urlBase}/api/perfil`);
   assert.deepEqual(await perfilConsultado.json(), dadosPerfil);
+
+  const perfilSemEndereco = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome: "Pessoa de teste", curso: "Jogos Digitais" })
+  });
+  assert.equal(perfilSemEndereco.status, 200);
+  assert.equal((await perfilSemEndereco.json()).endereco, null);
+
+  const perfilComEnderecoNulo = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome: "Pessoa de teste", curso: "Jogos Digitais", endereco: null })
+  });
+  assert.equal(perfilComEnderecoNulo.status, 200);
+  assert.equal((await perfilComEnderecoNulo.json()).endereco, null);
 });

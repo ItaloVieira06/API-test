@@ -61,28 +61,72 @@ pet-api/
 
 ## API
 
-Todas as respostas da API são JSON. Para requisições com corpo, envie `Content-Type: application/json`. `:id` é o identificador numérico da disciplina.
+Todas as respostas da API são JSON. Nas requisições com corpo, envie o cabeçalho `Content-Type: application/json`. O parâmetro `:id` identifica uma disciplina e deve ser numérico.
 
 ### Disciplinas
 
-| Método | Caminho | Corpo | Sucesso | Erros principais |
-|---|---|---|---|---|
-| `GET` | `/api/disciplinas` | — | `200`: lista de disciplinas | — |
-| `GET` | `/api/disciplinas/:id` | — | `200`: disciplina | `404`: disciplina inexistente |
-| `POST` | `/api/disciplinas` | `{"nome":"Banco de Dados","semestre":3}` | `201`: disciplina criada | `400`: nome ausente/vazio ou semestre inválido |
-| `PUT` | `/api/disciplinas/:id` | `{"nome":"Banco de Dados","semestre":4}` | `200`: disciplina atualizada | `400`: dados inválidos; `404`: disciplina inexistente |
-| `DELETE` | `/api/disciplinas/:id` | — | `200`: disciplina removida | `404`: disciplina inexistente |
+#### Listar disciplinas
 
-O nome é removido de espaços nas extremidades. `semestre` deve ser um número inteiro maior que zero. Cada disciplina tem o formato `{"id":1,"nome":"Banco de Dados","semestre":3}`.
+`GET /api/disciplinas`
+
+Retorna `200` e uma lista de disciplinas.
+
+#### Consultar uma disciplina
+
+`GET /api/disciplinas/:id`
+
+Retorna `200` e a disciplina solicitada. Se o identificador não existir, retorna `404`.
+
+#### Criar uma disciplina
+
+`POST /api/disciplinas`
+
+Envie `nome` e `semestre` no corpo da requisição:
+
+```json
+{
+  "nome": "Banco de Dados",
+  "semestre": 3
+}
+```
+
+Retorna `201` e a disciplina criada. O nome é obrigatório e não pode ficar vazio; o semestre deve ser um número inteiro maior que zero. Dados inválidos retornam `400`.
+
+#### Atualizar uma disciplina
+
+`PUT /api/disciplinas/:id`
+
+O corpo segue o mesmo formato da criação. Retorna `200` e a disciplina atualizada, `400` para dados inválidos e `404` se a disciplina não existir.
+
+#### Excluir uma disciplina
+
+`DELETE /api/disciplinas/:id`
+
+Retorna `200` e a disciplina removida. Se o identificador não existir, retorna `404`.
+
+O nome enviado é removido de espaços nas extremidades. As respostas de disciplina seguem o formato:
+
+```json
+{
+  "id": 1,
+  "nome": "Banco de Dados",
+  "semestre": 3
+}
+```
 
 ### Perfil
 
-| Método | Caminho | Corpo | Sucesso | Erros principais |
-|---|---|---|---|---|
-| `GET` | `/api/perfil` | — | `200`: perfil atual | — |
-| `PUT` | `/api/perfil` | Ver exemplo abaixo | `200`: perfil atualizado e salvo | `400`: nome ou curso ausente/vazio; `500`: falha ao gravar o arquivo |
+#### Consultar o perfil
 
-Exemplo de corpo para atualizar o perfil:
+`GET /api/perfil`
+
+Retorna `200` e os dados atuais do perfil.
+
+#### Atualizar o perfil
+
+`PUT /api/perfil`
+
+Envie `nome`, `curso` e `endereco` no corpo:
 
 ```json
 {
@@ -100,7 +144,16 @@ Exemplo de corpo para atualizar o perfil:
 }
 ```
 
-`nome` e `curso` são obrigatórios e não podem ficar vazios. `endereco` pode ser `null`; a interface preenche seus campos a partir do ViaCEP. `numero` e `complemento` são opcionais e, quando enviados como texto, têm espaços nas extremidades removidos.
+Retorna `200` e o perfil atualizado. `nome` e `curso` são obrigatórios e não podem ficar vazios; caso contrário, a API retorna `400`. Se ocorrer uma falha ao salvar o arquivo, retorna `500`.
+
+`endereco` é opcional: pode ser omitido ou enviado como `null`. Quando informado, deve ser um objeto com:
+
+- `cep`: oito dígitos, com ou sem hífen (por exemplo, `01001000` ou `01001-000`); a API o armazena no formato `00000-000`.
+- `logradouro`, `bairro` e `localidade`: textos obrigatórios e não vazios.
+- `uf`: sigla de duas letras; a API a armazena em maiúsculas.
+- `numero` e `complemento`: textos opcionais, armazenados sem espaços nas extremidades.
+
+Um endereço com formato inválido retorna `400`. Na interface, os dados são preenchidos pela consulta ao ViaCEP.
 
 ## Persistência e configuração
 
