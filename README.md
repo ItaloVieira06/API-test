@@ -49,15 +49,19 @@ pet-api/
 │   └── style.css
 ├── src/
 │   ├── controllers/        # Validação e respostas HTTP
+│   ├── models/             # Contratos e fábricas dos objetos JSON
 │   ├── repositories/       # Acesso e armazenamento dos dados
 │   ├── routes/             # Rotas da API
 │   ├── app.js              # Configuração do Express e rotas
 │   └── server.js           # Inicialização do servidor
 ├── test/
-│   └── api.test.js         # Testes de integração
+│   ├── api.test.js         # Testes de integração
+│   └── objetos.test.js     # Testes dos contratos e fábricas
 ├── package.json
 └── perfil.json             # Persistência local, criada/atualizada pela API
 ```
+
+Os typedefs JSDoc e as fábricas para `Perfil`, `Endereco` e `Disciplina` ficam em `src/models/objetos.js`. Controllers e repositórios usam essas fábricas para manter a estrutura dos objetos JSON consistente.
 
 ## API
 
@@ -126,12 +130,15 @@ Retorna `200` e os dados atuais do perfil.
 
 `PUT /api/perfil`
 
-Envie `nome`, `curso` e `endereco` no corpo:
+Envie `nome`, `curso`, `instituicao`, `sobre` e `endereco` no corpo:
 
 ```json
 {
   "nome": "Nome da pessoa",
   "curso": "Jogos Digitais",
+  "instituicao": "Centro Universitário Farias Brito",
+  "sobre": "Texto de apresentação da pessoa.",
+  "email": "pessoa@exemplo.com",
   "endereco": {
     "cep": "01001-000",
     "logradouro": "Praça da Sé",
@@ -140,11 +147,32 @@ Envie `nome`, `curso` e `endereco` no corpo:
     "bairro": "Sé",
     "localidade": "São Paulo",
     "uf": "SP"
+  },
+  "redesSociais": {
+    "github": {
+      "nome": "GitHub",
+      "url": "https://github.com/"
+    },
+    "instagram": {
+      "nome": "Instagram",
+      "url": "https://www.instagram.com/"
+    },
+    "linkedin": {
+      "nome": "LinkedIn",
+      "url": "https://www.linkedin.com/"
+    }
   }
 }
 ```
 
-Retorna `200` e o perfil atualizado. `nome` e `curso` são obrigatórios e não podem ficar vazios; caso contrário, a API retorna `400`. Se ocorrer uma falha ao salvar o arquivo, retorna `500`.
+Retorna `200` e o perfil atualizado. `nome`, `curso` e `instituicao` são obrigatórios e não podem ficar vazios; caso contrário, a API retorna `400`. Se ocorrer uma falha ao salvar o arquivo, retorna `500`.
+Na interface, clique no nome, no curso ou na instituição para editá-los; o botão **Salvar** aparece durante a edição. O curso e a instituição são exibidos na mesma linha, separados por hífen, e podem ser editados independentemente. Ao editar a instituição, o link de pesquisa Google é atualizado com o nome informado e termos para localizar endereço, site ou portal oficial. A pessoa confere os resultados manualmente; a aplicação não consulta o Google nem confirma automaticamente a existência da instituição. A pesquisa é apenas um auxílio e não impede o salvamento. Os valores são removidos de espaços nas extremidades, e valores vazios ou compostos apenas por espaços são rejeitados tanto na interface quanto pela API.
+
+O texto **Sobre** também é editável e é persistido no perfil, permanecendo após recarregar ou reiniciar o servidor. Se `sobre` for omitido em uma atualização, o valor salvo anteriormente é mantido.
+
+`redesSociais` é opcional. Se omitido, os links previamente salvos são mantidos; em um perfil novo, são usados os endereços oficiais de GitHub, Instagram e LinkedIn. Cada rede deve conter `nome` (de 1 a 40 caracteres) e `url` HTTP ou HTTPS (até 2048 caracteres); dados inválidos retornam `400`. Na interface, clique em **Editar** abaixo de um botão social para alterar seu nome e link. As alterações são persistidas no perfil.
+
+`email` é opcional para atualizações da API; quando omitido, o valor salvo é mantido. Se informado, deve estar vazio ou ser um endereço válido com até 254 caracteres. Na interface, use **Editar** abaixo de **Entrar em contato** para definir o email do perfil. O botão de contato abre um formulário e prepara a mensagem no aplicativo de email padrão; a pessoa deve revisar e confirmar o envio nesse aplicativo. A aplicação não envia emails diretamente nem simula confirmação de envio.
 
 `endereco` é opcional: pode ser omitido ou enviado como `null`. Quando informado, deve ser um objeto com:
 
@@ -158,6 +186,7 @@ Um endereço com formato inválido retorna `400`. Na interface, os dados são pr
 ## Persistência e configuração
 
 - **Perfil:** salvo em `pet-api/perfil.json` e mantido entre reinicializações. Esse arquivo local é ignorado pelo Git. Para escolher outro caminho, defina `PERFIL_ARQUIVO` no ambiente antes de iniciar o servidor.
+- **Perfil sem dados pré-carregados:** nome, curso e instituição começam com **Insira seu nome**, **Insira seu Curso** e **Insira sua Instituição**. O endereço começa vazio e pode ser adicionado pelo botão. As alterações do perfil são gravadas em `pet-api/perfil.json` e permanecem após recarregar ou reiniciar a aplicação.
 - **Disciplinas:** mantidas somente em memória; alterações são perdidas quando o processo do servidor é reiniciado.
 - **Porta:** `PORT`, com padrão `3000`.
 - **CEP:** a consulta é feita pelo navegador ao serviço externo ViaCEP; é necessária conexão à internet para essa funcionalidade.

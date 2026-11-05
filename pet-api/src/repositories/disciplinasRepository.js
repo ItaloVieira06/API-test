@@ -1,7 +1,9 @@
+const { criarDisciplina: construirDisciplina } = require("../models/objetos");
+
 let disciplinas = [
-  { id: 1, nome: "Tecnologias de Internet", semestre: 4 },
-  { id: 2, nome: "Interação Humano Computador", semestre: 2 },
-  { id: 3, nome: "Design de Jogos Digitais II", semestre: 4 }
+  construirDisciplina({ id: 1, nome: "Tecnologias de Internet", semestre: 4 }),
+  construirDisciplina({ id: 2, nome: "Interação Humano Computador", semestre: 2 }),
+  construirDisciplina({ id: 3, nome: "Design de Jogos Digitais II", semestre: 4 })
 ];
 
 let proximoId = Math.max(...disciplinas.map((disciplina) => disciplina.id)) + 1;
@@ -15,7 +17,7 @@ function buscarDisciplinaPorId(id) {
 }
 
 function criarDisciplina(nome, semestre) {
-  const disciplina = { id: proximoId++, nome, semestre };
+  const disciplina = construirDisciplina({ id: proximoId++, nome, semestre });
   disciplinas.push(disciplina);
   return disciplina;
 }

@@ -3,6 +3,7 @@ const fs = require("node:fs/promises");
 const os = require("node:os");
 const path = require("node:path");
 const { after, before, test } = require("node:test");
+const { PERFIL_PADRAO } = require("../src/models/objetos");
 
 let app;
 let servidor;
@@ -13,6 +14,7 @@ let arquivoPerfilTemporario;
 before(async () => {
   diretorioTemporario = await fs.mkdtemp(path.join(os.tmpdir(), "pet-api-test-"));
   arquivoPerfilTemporario = path.join(diretorioTemporario, "perfil.json");
+  await fs.writeFile(arquivoPerfilTemporario, JSON.stringify({ endereco: null }));
   process.env.PERFIL_ARQUIVO = arquivoPerfilTemporario;
 
   app = require("../src/app");
@@ -87,14 +89,63 @@ test("expõe a interface e os contratos da API", async () => {
 
   const perfilInicial = await fetch(`${urlBase}/api/perfil`);
   assert.equal(perfilInicial.status, 200);
-  assert.equal(typeof (await perfilInicial.json()).nome, "string");
+  const dadosPerfilInicial = await perfilInicial.json();
+  assert.equal(dadosPerfilInicial.nome, "Insira seu nome");
+  assert.equal(dadosPerfilInicial.curso, "Insira seu Curso");
+  assert.equal(dadosPerfilInicial.instituicao, "Insira sua Instituição");
+  assert.equal(dadosPerfilInicial.sobre, PERFIL_PADRAO.sobre);
+  assert.equal(dadosPerfilInicial.email, "");
+  assert.equal(dadosPerfilInicial.endereco, null);
+  assert.deepEqual(dadosPerfilInicial.redesSociais, PERFIL_PADRAO.redesSociais);
+  assert.equal(Object.hasOwn(dadosPerfilInicial, "instituicaoVerificada"), false);
 
   const atualizacaoPerfilInvalida = await fetch(`${urlBase}/api/perfil`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nome: "", curso: "Jogos Digitais" })
+    body: JSON.stringify({ nome: "", curso: "Jogos Digitais", instituicao: "Instituição de teste" })
   });
   assert.equal(atualizacaoPerfilInvalida.status, 400);
+
+  const cursoInvalido = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "   ",
+      instituicao: "Instituição de teste"
+    })
+  });
+  assert.equal(cursoInvalido.status, 400);
+
+  const instituicaoInvalida = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "Jogos Digitais",
+      instituicao: "   "
+    })
+  });
+  assert.equal(instituicaoInvalida.status, 400);
+
+  const instituicaoAusente = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome: "Pessoa de teste", curso: "Jogos Digitais" })
+  });
+  assert.equal(instituicaoAusente.status, 400);
+
+  const emailInvalido = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "Jogos Digitais",
+      instituicao: "Instituição de teste",
+      email: "endereco-invalido"
+    })
+  });
+  assert.equal(emailInvalido.status, 400);
 
   const enderecoInvalido = await fetch(`${urlBase}/api/perfil`, {
     method: "PUT",
@@ -102,6 +153,7 @@ test("expõe a interface e os contratos da API", async () => {
     body: JSON.stringify({
       nome: "Pessoa de teste",
       curso: "Jogos Digitais",
+      instituicao: "Instituição de teste",
       endereco: {
         cep: "123",
         logradouro: "Rua de teste",
@@ -119,14 +171,18 @@ test("expõe a interface e os contratos da API", async () => {
     body: JSON.stringify({
       nome: "Pessoa de teste",
       curso: "Jogos Digitais",
+      instituicao: "Instituição de teste",
       endereco: { cep: "01001000" }
     })
   });
   assert.equal(enderecoIncompleto.status, 400);
 
   const dadosPerfil = {
-    nome: "Pessoa de teste",
-    curso: "Jogos Digitais",
+    nome: "  Pessoa de teste  ",
+    curso: " Jogos Digitais ",
+    instituicao: " Instituição de teste ",
+    sobre: "Texto Sobre editado para teste.",
+    email: "  pessoa@exemplo.com  ",
     endereco: {
       cep: "01001-000",
       logradouro: "Praça da Sé",
@@ -143,26 +199,151 @@ test("expõe a interface e os contratos da API", async () => {
     body: JSON.stringify(dadosPerfil)
   });
   assert.equal(atualizacaoPerfil.status, 200);
-  assert.deepEqual(await atualizacaoPerfil.json(), dadosPerfil);
+  const perfilAtualizado = {
+    ...dadosPerfil,
+    nome: dadosPerfil.nome.trim(),
+    curso: dadosPerfil.curso.trim(),
+    instituicao: dadosPerfil.instituicao.trim(),
+    email: dadosPerfil.email.trim(),
+    redesSociais: PERFIL_PADRAO.redesSociais
+  };
+  assert.deepEqual(await atualizacaoPerfil.json(), perfilAtualizado);
 
   const perfilPersistido = JSON.parse(await fs.readFile(arquivoPerfilTemporario, "utf8"));
-  assert.deepEqual(perfilPersistido, dadosPerfil);
+  assert.deepEqual(perfilPersistido, perfilAtualizado);
   const perfilConsultado = await fetch(`${urlBase}/api/perfil`);
-  assert.deepEqual(await perfilConsultado.json(), dadosPerfil);
+  assert.deepEqual(await perfilConsultado.json(), perfilAtualizado);
+
+  const instituicaoAtualizada = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      ...perfilAtualizado,
+      instituicao: "Instituição atualizada"
+    })
+  });
+  assert.equal(instituicaoAtualizada.status, 200);
+  assert.equal((await instituicaoAtualizada.json()).instituicao, "Instituição atualizada");
+  assert.equal(
+    JSON.parse(await fs.readFile(arquivoPerfilTemporario, "utf8")).instituicao,
+    "Instituição atualizada"
+  );
+  const caminhoRepository = require.resolve("../src/repositories/perfilRepository");
+  delete require.cache[caminhoRepository];
+  const repositoryRecarregado = require("../src/repositories/perfilRepository");
+  assert.equal(repositoryRecarregado.obterPerfil().instituicao, "Instituição atualizada");
+  assert.equal(repositoryRecarregado.obterPerfil().sobre, "Texto Sobre editado para teste.");
+  assert.equal(repositoryRecarregado.obterPerfil().endereco.cep, "01001-000");
 
   const perfilSemEndereco = await fetch(`${urlBase}/api/perfil`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nome: "Pessoa de teste", curso: "Jogos Digitais" })
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "Jogos Digitais",
+      instituicao: "Instituição de teste"
+    })
   });
   assert.equal(perfilSemEndereco.status, 200);
-  assert.equal((await perfilSemEndereco.json()).endereco, null);
+  const perfilSemEnderecoSalvo = await perfilSemEndereco.json();
+  assert.equal(perfilSemEnderecoSalvo.endereco, null);
+  assert.equal(perfilSemEnderecoSalvo.sobre, "Texto Sobre editado para teste.");
+  assert.equal(
+    JSON.parse(await fs.readFile(arquivoPerfilTemporario, "utf8")).sobre,
+    "Texto Sobre editado para teste."
+  );
 
   const perfilComEnderecoNulo = await fetch(`${urlBase}/api/perfil`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nome: "Pessoa de teste", curso: "Jogos Digitais", endereco: null })
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "Jogos Digitais",
+      instituicao: "Instituição de teste",
+      endereco: null
+    })
   });
   assert.equal(perfilComEnderecoNulo.status, 200);
-  assert.equal((await perfilComEnderecoNulo.json()).endereco, null);
+  const perfilAtualizadoEnderecoNulo = await perfilComEnderecoNulo.json();
+  assert.equal(perfilAtualizadoEnderecoNulo.endereco, null);
+  assert.equal(Object.hasOwn(perfilAtualizadoEnderecoNulo, "instituicaoVerificada"), false);
+
+  const campoLegadoIgnorado = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "Jogos Digitais",
+      instituicao: "Instituição de teste",
+      instituicaoVerificada: true,
+      endereco: null
+    })
+  });
+  assert.equal(campoLegadoIgnorado.status, 200);
+  assert.equal(
+    Object.hasOwn(await campoLegadoIgnorado.json(), "instituicaoVerificada"),
+    false
+  );
+
+  const redesSociaisInvalidas = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "Jogos Digitais",
+      instituicao: "Instituição de teste",
+      redesSociais: {
+        ...PERFIL_PADRAO.redesSociais,
+        github: { nome: "GitHub", url: "javascript:alert(1)" }
+      }
+    })
+  });
+  assert.equal(redesSociaisInvalidas.status, 400);
+
+  const redesSociaisAtualizadas = {
+    ...PERFIL_PADRAO.redesSociais,
+    github: { nome: "Meu GitHub", url: "https://github.com/usuario" }
+  };
+  const atualizacaoRedeSocial = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: "Pessoa de teste",
+      curso: "Jogos Digitais",
+      instituicao: "Instituição de teste",
+      redesSociais: redesSociaisAtualizadas
+    })
+  });
+  assert.equal(atualizacaoRedeSocial.status, 200);
+  assert.deepEqual(
+    (await atualizacaoRedeSocial.json()).redesSociais,
+    redesSociaisAtualizadas
+  );
+  assert.deepEqual(
+    JSON.parse(await fs.readFile(arquivoPerfilTemporario, "utf8")).redesSociais,
+    redesSociaisAtualizadas
+  );
+
+  const atualizacaoOutroCampo = await fetch(`${urlBase}/api/perfil`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: "Pessoa de teste atualizada",
+      curso: "Jogos Digitais",
+      instituicao: "Instituição de teste"
+    })
+  });
+  assert.equal(atualizacaoOutroCampo.status, 200);
+  const perfilAposOutraAtualizacao = await atualizacaoOutroCampo.json();
+  assert.deepEqual(perfilAposOutraAtualizacao.redesSociais, redesSociaisAtualizadas);
+  assert.equal(perfilAposOutraAtualizacao.email, "pessoa@exemplo.com");
+  assert.equal(
+    JSON.parse(await fs.readFile(arquivoPerfilTemporario, "utf8")).email,
+    "pessoa@exemplo.com"
+  );
+
+  delete require.cache[caminhoRepository];
+  const perfilRecarregado = require("../src/repositories/perfilRepository").obterPerfil();
+  assert.equal(perfilRecarregado.email, "pessoa@exemplo.com");
+  assert.deepEqual(perfilRecarregado.redesSociais, redesSociaisAtualizadas);
 });

@@ -18,10 +18,41 @@
             <img src="./assets/Tizil.png" alt="Foto do usuário" width="120" />
 
             <div>
-                <h1>Ítalo do Espírito Santo Vieira</h1>
-                <p>Jogos Digitais - Centro Universitário Farias Brito</p>
-                <p id="cep-salvo" hidden></p>
-                <button id="abrir-modal-endereco" class="botao-disciplina" type="button">Informar endereço</button>
+                <div class="perfil-editor">
+                    <h1><span id="nome-perfil" class="perfil-valor-editavel" role="button" tabindex="0">
+                            Insira seu nome</span></h1>
+                    <input id="campo-nome-perfil" class="perfil-campo-edicao" type="text" autocomplete="name"
+                        aria-label="Editar nome" placeholder="Insira seu nome" hidden />
+                    <button id="salvar-nome-perfil" class="botao-disciplina perfil-salvar" type="button"
+                        hidden>Salvar</button>
+                    <p id="erro-nome-perfil" class="erro-perfil" role="alert" aria-live="polite" hidden></p>
+                </div>
+                <div class="perfil-editor">
+                    <p class="curso-linha"><span id="curso-perfil" class="perfil-valor-editavel" role="button"
+                            tabindex="0">Insira seu Curso</span> - <span id="instituicao-perfil"
+                            class="perfil-valor-editavel" role="button" tabindex="0">Insira sua Instituição</span></p>
+                    <input id="campo-curso-perfil" class="perfil-campo-edicao" type="text" aria-label="Editar curso"
+                        placeholder="Insira seu Curso" hidden />
+                    <button id="salvar-curso-perfil" class="botao-disciplina perfil-salvar" type="button"
+                        hidden>Salvar</button>
+                    <p id="erro-curso-perfil" class="erro-perfil" role="alert" aria-live="polite" hidden></p>
+                    <input id="campo-instituicao-perfil" class="perfil-campo-edicao" type="text"
+                        aria-label="Editar instituição de ensino" placeholder="Insira sua Instituição" hidden />
+                    <a id="pesquisar-instituicao-google" class="perfil-pesquisa-google"
+                        href="https://www.google.com/search" target="_blank" rel="noopener noreferrer" hidden>
+                        Pesquisar instituição no Google
+                    </a>
+                    <p class="ajuda-pesquisa-instituicao" id="ajuda-pesquisa-instituicao" hidden>
+                        Confira nos resultados o endereço, site ou portal oficial antes de salvar.
+                    </p>
+                    <button id="salvar-instituicao-perfil" class="botao-disciplina perfil-salvar" type="button"
+                        hidden>Salvar</button>
+                    <p id="erro-instituicao-perfil" class="erro-perfil" role="alert" aria-live="polite" hidden></p>
+                </div>
+                <div class="linha-endereco-perfil">
+                    <button id="cep-salvo" class="endereco-perfil-interativo" type="button" hidden></button>
+                    <button id="abrir-modal-endereco" class="botao-disciplina" type="button">Informar endereço</button>
+                </div>
 
                 <div class="hobbies">
                     <span>Programação</span>
@@ -39,24 +70,32 @@
         <h2>Sobre</h2>
 
         <div class="sobre-editor" id="sobre-editor">
-          <p id="texto-sobre" role="button" tabindex="0" aria-label="Clique para editar o texto Sobre">
-            Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical
-            Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at
-            Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem
-            Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable
-            source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes
-            of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular
-            during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in
-            section 1.10.32.
+            <p id="texto-sobre" role="button" tabindex="0" aria-label="Clique para editar o texto Sobre">
+                Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical
+                Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at
+                Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a
+                Lorem
+                Ipsum passage, and going through the cites of the word in classical literature, discovered the
+                undoubtable
+                source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The
+                Extremes
+                of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very
+                popular
+                during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line
+                in
+                section 1.10.32.
 
-            The standard chunk of Lorem Ipsum used since 1966 is reproduced below for those interested. Sections 1.10.32
-            and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form,
-            accompanied by English versions from the 1914 translation by H. Rackham.
-          </p>
-          <textarea id="campo-sobre" aria-label="Editar texto Sobre" hidden></textarea>
-          <div class="sobre-acoes">
-            <button id="salvar-sobre" class="botao-disciplina" type="button" hidden>Salvar</button>
-          </div>
+                The standard chunk of Lorem Ipsum used since 1966 is reproduced below for those interested. Sections
+                1.10.32
+                and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original
+                form,
+                accompanied by English versions from the 1914 translation by H. Rackham.
+            </p>
+            <textarea id="campo-sobre" aria-label="Editar texto Sobre" hidden></textarea>
+            <div class="sobre-acoes">
+                <button id="salvar-sobre" class="botao-disciplina" type="button" hidden>Salvar</button>
+            </div>
+            <p id="erro-sobre" class="erro-perfil" role="alert" aria-live="polite" hidden></p>
         </div>
 
         <div class="votacao">
@@ -66,14 +105,30 @@
         </div>
 
         <div class="links">
-            <a class="contato" href="mailto:joao@email.com">
-                Entrar em contato
-            </a>
+            <div class="contato-perfil">
+                <button id="abrir-modal-envio-email" class="contato" type="button">Entrar em contato</button>
+                <button id="abrir-modal-email-perfil" class="editar-rede-social" type="button"
+                    aria-label="Editar email do perfil">Editar</button>
+            </div>
 
             <div class="redes-sociais">
-                <a href="https://github.com/" target="_blank">GitHub</a>
-                <a href="https://www.instagram.com/" target="_blank">Instagram</a>
-                <a href="https://www.linkedin.com/" target="_blank">LinkedIn</a>
+                <div class="rede-social">
+                    <a id="link-github" href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <button class="editar-rede-social" type="button" data-rede-social="github"
+                        aria-label="Editar botão GitHub">Editar</button>
+                </div>
+                <div class="rede-social">
+                    <a id="link-instagram" href="https://www.instagram.com/" target="_blank"
+                        rel="noopener noreferrer">Instagram</a>
+                    <button class="editar-rede-social" type="button" data-rede-social="instagram"
+                        aria-label="Editar botão Instagram">Editar</button>
+                </div>
+                <div class="rede-social">
+                    <a id="link-linkedin" href="https://www.linkedin.com/" target="_blank"
+                        rel="noopener noreferrer">LinkedIn</a>
+                    <button class="editar-rede-social" type="button" data-rede-social="linkedin"
+                        aria-label="Editar botão LinkedIn">Editar</button>
+                </div>
             </div>
         </div>
 
@@ -109,25 +164,89 @@
                 <label for="cep-endereco">CEP</label>
                 <div class="campo-cep">
                     <input id="cep-endereco" name="cep" type="text" inputmode="numeric" maxlength="9"
+                        pattern="[0-9]{5}-?[0-9]{3}"
                         autocomplete="postal-code" placeholder="00000-000" required />
                     <button id="buscar-cep" class="botao-disciplina" type="button">Buscar</button>
                 </div>
                 <label for="rua-endereco">Rua</label>
-                <input id="rua-endereco" name="logradouro" type="text" autocomplete="address-line1" readonly />
+                <input id="rua-endereco" name="logradouro" type="text" autocomplete="address-line1"
+                    maxlength="120" required />
                 <label for="numero-endereco">Número</label>
                 <input id="numero-endereco" name="numero" type="text" autocomplete="address-line2" />
                 <label for="complemento-endereco">Complemento (opcional)</label>
                 <input id="complemento-endereco" name="complemento" type="text" />
                 <label for="bairro-endereco">Bairro</label>
-                <input id="bairro-endereco" name="bairro" type="text" readonly />
+                <input id="bairro-endereco" name="bairro" type="text" maxlength="100" required />
                 <label for="cidade-endereco">Cidade</label>
-                <input id="cidade-endereco" name="localidade" type="text" autocomplete="address-level2" readonly />
+                <input id="cidade-endereco" name="localidade" type="text" autocomplete="address-level2"
+                    maxlength="100" required />
                 <label for="uf-endereco">UF</label>
-                <input id="uf-endereco" name="uf" type="text" autocomplete="address-level1" readonly />
+                <input id="uf-endereco" name="uf" type="text" autocomplete="address-level1" maxlength="2"
+                    pattern="[A-Za-z]{2}" title="Informe a sigla do estado com 2 letras" required />
+                <button id="buscar-cep-endereco" class="botao-disciplina" type="button">
+                    Buscar CEP pelo endereço
+                </button>
+                <label id="rotulo-ceps-encontrados" for="ceps-encontrados" hidden>Resultados da busca</label>
+                <select id="ceps-encontrados" hidden aria-label="CEPs encontrados"></select>
                 <p id="status-endereco" role="status" aria-live="polite"></p>
                 <div class="acoes-modal">
                     <span></span>
-                    <button id="salvar-endereco" class="botao-disciplina" type="submit" disabled>Salvar endereço</button>
+                    <button id="salvar-endereco" class="botao-disciplina" type="submit" disabled>Salvar
+                        endereço</button>
+                </div>
+            </form>
+        </dialog>
+        <dialog id="modal-rede-social" aria-labelledby="titulo-modal-rede-social">
+            <form id="form-rede-social">
+                <div class="cabecalho-modal">
+                    <h2 id="titulo-modal-rede-social">Editar botão</h2>
+                    <button id="fechar-modal-rede-social" class="fechar-modal" type="button"
+                        aria-label="Fechar janela">×</button>
+                </div>
+                <label for="nome-rede-social">Nome do botão</label>
+                <input id="nome-rede-social" name="nome" type="text" maxlength="40" required />
+                <label for="url-rede-social">Novo link</label>
+                <input id="url-rede-social" name="url" type="url" maxlength="2048" placeholder="https://exemplo.com/"
+                    required />
+                <p id="erro-rede-social" class="erro-perfil" role="alert" aria-live="polite" hidden></p>
+                <div class="acoes-modal">
+                    <button id="cancelar-rede-social" class="botao-disciplina" type="button">Cancelar</button>
+                    <button id="salvar-rede-social" class="botao-disciplina" type="submit">Salvar</button>
+                </div>
+            </form>
+        </dialog>
+        <dialog id="modal-email-perfil" aria-labelledby="titulo-modal-email-perfil">
+            <form id="form-email-perfil">
+                <div class="cabecalho-modal">
+                    <h2 id="titulo-modal-email-perfil">Editar email do perfil</h2>
+                    <button id="fechar-modal-email-perfil" class="fechar-modal" type="button"
+                        aria-label="Fechar janela">×</button>
+                </div>
+                <label for="email-perfil">Email</label>
+                <input id="email-perfil" name="email" type="email" maxlength="254" autocomplete="email" required />
+                <p id="erro-email-perfil" class="erro-perfil" role="alert" aria-live="polite" hidden></p>
+                <div class="acoes-modal">
+                    <button id="cancelar-email-perfil" class="botao-disciplina" type="button">Cancelar</button>
+                    <button id="salvar-email-perfil" class="botao-disciplina" type="submit">Salvar</button>
+                </div>
+            </form>
+        </dialog>
+        <dialog id="modal-envio-email" aria-labelledby="titulo-modal-envio-email">
+            <form id="form-envio-email">
+                <div class="cabecalho-modal">
+                    <h2 id="titulo-modal-envio-email">Enviar email</h2>
+                    <button id="fechar-modal-envio-email" class="fechar-modal" type="button"
+                        aria-label="Fechar janela">×</button>
+                </div>
+                <p class="destinatario-email">Para: <span id="destinatario-email"></span></p>
+                <label for="assunto-email">Assunto</label>
+                <input id="assunto-email" name="assunto" type="text" maxlength="200" required />
+                <label for="mensagem-email">Mensagem</label>
+                <textarea id="mensagem-email" name="mensagem" maxlength="5000" required></textarea>
+                <p id="status-envio-email" role="status" aria-live="polite" hidden></p>
+                <div class="acoes-modal">
+                    <button id="cancelar-envio-email" class="botao-disciplina" type="button">Cancelar</button>
+                    <button id="enviar-email" class="botao-disciplina" type="submit">Enviar email</button>
                 </div>
             </form>
         </dialog>

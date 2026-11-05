@@ -80,16 +80,63 @@ img {
   border: 3px solid #ddd;
 }
 
-/* Nome */
-h1 {
+.perfil-editor {
+  margin: 0 0 8px;
+}
+
+.perfil-editor h1 {
   margin: 0 0 8px;
   font-size: 28px;
 }
 
-/* Curso */
-h1 + p {
+.perfil-editor .curso-linha {
   margin: 0;
   color: #666;
+}
+
+.perfil-valor-editavel {
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+}
+
+.perfil-valor-editavel:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 3px;
+}
+
+.perfil-campo-edicao {
+  width: 100%;
+  max-width: 420px;
+  padding: 8px;
+  border: 1px solid #999;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.botao-disciplina.perfil-salvar {
+  margin-top: 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.perfil-editor [hidden] {
+  display: none;
+}
+
+.perfil-pesquisa-google {
+  display: block;
+  margin-top: 8px;
+}
+
+.ajuda-pesquisa-instituicao {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+.erro-perfil {
+  margin: 4px 0 0;
+  color: #b00020;
 }
 
 /* Títulos */
@@ -273,15 +320,40 @@ dialog form > input {
 }
 
 #abrir-modal-endereco {
-    margin-top: 12px;
     padding: 6px 10px;
     font-size: 13px;
 }
 
-#cep-salvo {
-    margin: 8px 0 0;
+.linha-endereco-perfil {
+    margin-top: 12px;
+}
+
+.endereco-perfil-interativo {
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: #666;
+    font: inherit;
     font-size: 12px;
+    line-height: 1.6;
+    text-align: left;
+    cursor: pointer;
+    overflow-wrap: break-word;
+}
+
+.endereco-perfil-interativo:hover {
+    color: #0066cc;
+    text-decoration: underline;
+}
+
+.endereco-perfil-interativo:focus-visible {
+    outline: 2px solid #0066cc;
+    outline-offset: 3px;
+}
+
+#cep-salvo {
+    margin: 0;
 }
 
 .campo-cep {
@@ -299,6 +371,21 @@ dialog form > input {
     font: inherit;
 }
 
+#buscar-cep-endereco {
+    width: 100%;
+    margin-top: 12px;
+}
+
+#ceps-encontrados {
+    width: 100%;
+    min-height: 40px;
+    margin-top: 8px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font: inherit;
+}
+
 #status-endereco {
     min-height: 1.2em;
     margin: 12px 0;
@@ -306,7 +393,8 @@ dialog form > input {
 }
 
 #salvar-endereco:disabled,
-#buscar-cep:disabled {
+#buscar-cep:disabled,
+#buscar-cep-endereco:disabled {
     cursor: wait;
     opacity: 0.7;
 }
@@ -321,6 +409,14 @@ dialog form > input {
     display: flex;
     justify-content: space-between;
     gap: 12px;
+}
+
+#form-rede-social .acoes-modal,
+#form-email-perfil .acoes-modal,
+#form-envio-email .acoes-modal {
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
 }
 
 .botao-excluir {
@@ -353,22 +449,42 @@ dialog .botao-disciplina:disabled {
 
 .links {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
     margin-top: 45px;
     width: 100%;
 }
 
 .redes-sociais {
     display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
     gap: 10px;
 }
 
+.rede-social {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    text-align: center;
+}
+
 .links a {
-    padding: 10px 16px;
+    padding: 7px 10px;
     border-radius: 6px;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 13px;
+}
+
+.contato-perfil {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    text-align: center;
 }
 
 .redes-sociais a {
@@ -380,13 +496,87 @@ dialog .botao-disciplina:disabled {
     background-color: #d6d8db;
 }
 
+.editar-rede-social {
+    align-self: center;
+    padding: 2px 6px;
+    border: 0;
+    background: transparent;
+    color: #666;
+    font: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.editar-rede-social:hover {
+    color: #0066cc;
+    text-decoration: underline;
+}
+
+.editar-rede-social:focus-visible {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
 .contato {
+    padding: 7px 10px;
+    border: 0;
     background-color: #0066cc;
     color: white;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
 }
 
 .contato:hover {
     background-color: #0052a3;
+}
+
+.acoes-modal .botao-disciplina {
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+#cancelar-rede-social,
+#cancelar-email-perfil,
+#cancelar-envio-email {
+    background-color: #b00020;
+}
+
+#cancelar-rede-social:hover,
+#cancelar-email-perfil:hover,
+#cancelar-envio-email:hover {
+    background-color: #8c0019;
+}
+
+#salvar-rede-social,
+#salvar-email-perfil,
+#enviar-email {
+    background-color: #218838;
+}
+
+#salvar-rede-social:hover,
+#salvar-email-perfil:hover,
+#enviar-email:hover {
+    background-color: #19692c;
+}
+
+.destinatario-email {
+    overflow-wrap: anywhere;
+}
+
+#modal-envio-email textarea {
+    display: block;
+    width: 100%;
+    min-height: 120px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font: inherit;
+    resize: vertical;
+}
+
+.status-envio-email-info {
+    color: #276738;
 }
 
 footer {
@@ -502,13 +692,29 @@ body.tema-escuro dialog form > input {
     border-color: #555555;
 }
 
+body.tema-escuro #modal-envio-email textarea {
+    background-color: #333333;
+    color: #eeeeee;
+    border-color: #555555;
+}
+
 body.tema-escuro .sobre-editor textarea {
     background-color: #333333;
     color: #eeeeee;
     border-color: #555555;
 }
 
+body.tema-escuro .status-envio-email-info {
+    color: #86d398;
+}
+
 body.tema-escuro .campo-cep input {
+    background-color: #333333;
+    color: #eeeeee;
+    border-color: #555555;
+}
+
+body.tema-escuro #ceps-encontrados {
     background-color: #333333;
     color: #eeeeee;
     border-color: #555555;
@@ -523,6 +729,14 @@ body.tema-escuro footer {
 body.tema-escuro .redes-sociais a {
     background-color: #333333;
     color: #eeeeee;
+}
+
+body.tema-escuro .editar-rede-social {
+    color: #bbbbbb;
+}
+
+body.tema-escuro .editar-rede-social:hover {
+    color: #8ab4f8;
 }
 
 .votacao {

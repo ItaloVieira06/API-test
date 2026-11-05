@@ -1,6 +1,11 @@
 import { carregarDisciplinas } from "./disciplinas.js";
 import { inicializarInterface } from "./interface.js";
-import { carregarPerfil } from "./perfil.js";
+import {
+  carregarPerfil,
+  inicializarEdicaoPerfil,
+  inicializarEdicaoRedesSociais,
+  inicializarContatoPerfil
+} from "./perfil.js";
 
 async function carregarDadosIniciais() {
   const indicadorCarregamento = document.getElementById("carregando");
@@ -16,4 +21,7 @@ async function carregarDadosIniciais() {
 }
 
 inicializarInterface();
+inicializarEdicaoPerfil();
+inicializarEdicaoRedesSociais();
+inicializarContatoPerfil();
 carregarDadosIniciais();
