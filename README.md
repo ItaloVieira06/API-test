@@ -26,6 +26,16 @@ $env:PORT = "3002"
 npm start
 ```
 
+Para criptografar o tráfego e o caminho das requisições com HTTPS, configure os caminhos para um certificado TLS válido e sua chave privada antes de iniciar o servidor:
+
+```powershell
+$env:HTTPS_CERT = "C:\caminho\para\certificado.pem"
+$env:HTTPS_KEY = "C:\caminho\para\chave-privada.pem"
+npm start
+```
+
+Com as duas variáveis configuradas, acesse `https://localhost:3010` (ou a porta definida em `PORT`). O certificado precisa ser válido e confiável para o nome do host usado. Não compartilhe nem versione a chave privada. Se as variáveis não forem definidas, o servidor inicia em HTTP, adequado apenas para desenvolvimento local; não use esse modo em redes públicas. HTTPS protege o caminho durante o tráfego, mas não o oculta da barra de endereço nem dos logs do servidor.
+
 Abra a URL do servidor para usar a interface de edição. A opção **Visualizar versão cliente** ou `/cliente.html` abre a versão somente para visualização: curso e instituição aparecem juntos, os hobbies ficam abaixo do endereço e contato/redes sociais são exibidos como botões, sem controles de edição. **Entrar em Contato** abre um formulário de assunto e mensagem; ao continuar, o aplicativo de email padrão é aberto com o email cadastrado como destinatário para revisão e confirmação do envio. O diretório `public/` contém os arquivos estáticos e `src/server.js` inicia o servidor Express.
 
 ## Testes
